@@ -85,3 +85,34 @@ function max (/*...*/){
 }
 var largest = max(1,10,100,2,3,1000,4,5,10000,6); // => 10000
 </pre>
+# 객체의 프로퍼티를 전달인자르 사용하기
+함수의 세개 이상의 매개변수가 있을 때 호출하는 인자의 올바른 순서를 기억하기 위함
+
+# 값으로서의 함수, 전달인자 형식, 자신만의 함수 프로퍼티 정의하기
+-책 본문 참조
+
+# 네임스페이스 함수, 클로저 후반부
+이 부분은 아마도 IIFE를 의미하는 부분인데 이 부분은 아래 링크를 참고하며 해당 글을 작성한 원작자의 설명을 듣겠음(원작자 - 강승철)
+[Module Pattern](https://github.com/dotNetTree/I-Konow-JS/blob/master/oop-in-js/03_module_pattern_and_....md)
+
+#. 클로저
+가장 일반적으로 중첩 함수를 반환할 때 어휘적 유효 범위를 알아볼 경우 사용한다.
+<pre>
+var scope = "global scope"
+function checkscope() {
+  var scope = "local scope"
+  function f() {return scope;}
+  return f();
+}
+checkscope(); //local scope
+</pre>
+다음 코드는 무엇을 반환하나
+<pre>
+var scope = "global scope"
+function checkscope() {
+  var scope = "local scope"
+  function f() {return scope;}
+  return f;
+}
+checkscope(); // function f() { return scope}
+</pre>
