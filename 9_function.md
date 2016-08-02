@@ -116,3 +116,37 @@ function checkscope() {
 }
 checkscope(); // function f() { return scope}
 </pre>
+
++ 클로저들이 공유해서는 안되는 변수를 공유하는 실수들
+<pre>
+//이 함수는 v를 반환하는 함수를 반환한다.
+function constfunc(v) {return function(){return v;}}
+//상수함수에 배열 생성
+var funcs = [];
+for (var i=0; i<10; i++) funcs[i] = constfunc(i)
+//배열요소 5의 함수는 값 5를 반환한다.
+</pre>
+
++ 또한 클로저를 작성 할 때 this는 자바스크립트의 변수가 아니라는 것이다. 바깥쪽의 this 값을  
+ 별도의 변수로 저장하지 않으면 클로저는 바깥쪽 함수의 this 값에 접근 할 수없다.
+
+# 함수 프로퍼티, 매서드, 생성자
++ length프로퍼티 (생략)
++ prototype프로퍼티 (생략)
++ call() / apply() 매서드 : 다른 객체의 매서드인것처럼 간접적으로 호출
+ES5 에서 call() 또는 apply() 의 첫 번째 인자는 함수내에서 this 값이 되는데 null/undefined든 상관없음
+
++ 본문 234페이지의 trace()함수 : 지정된 매서드를 새로운 매서드로 교체하는데 새로운 매서드는 원본메서드를 추가 기능으로 둘러쌈
++ Monkey patch :기존 메서드를 동적으로 수정하는 방식 (왠지 안티패턴의 냄새가 난다~!!!)
+
++ bind() 매서드
+함수와 객체를 묶는 함수, 전달하는 인자 중 첫번째 이후의 모든 인자는 this값과 함께 해당 함수의 인자로 바인딩 된다.
+커링이라고 부르기도 한다.
+[자바스크립트 커링](http://anster.tistory.com/144)
+
++ toString() 매서드
+책에서는 짧게 표현되어 있는데 개인적으로 타입을 체크할 때 유용하게 사용 할 수 있다고 생각한다.  
+보통 typeof(null 을 Object로 판단) / instanceof(이미 알고있는 클래스만 확인가능) / constructor (undefined/null 구분불가)
+주로 Object.toString() 으로 사용한다.
+
++ Function() 생성자 외 이하 항목은 다음시간에 나올것이므로 생략
