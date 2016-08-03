@@ -32,11 +32,11 @@ function hypotenuse(a,b) {
 그 반환값은 undefined  
 
 <strong>매서드 호출</strong>
-o.m = f;
-o.m ();
-o.m(x,y);
-o['m'](x,y);
-a[0](z)
+o.m = f;  
+o.m ();  
+o.m(x,y);  
+o['m'](x,y);  
+a[0](z)  
 
 복잡한 프로퍼티 접근 표현식을 포함 할 수 있다.
 f().m()
@@ -71,7 +71,7 @@ $(':hadder').map(function(){return this.id}).get().sort();
 + 생략 가능한 매개변수
 본래 정의된 값보다 적은 수의 잔달인자로 함수가 호출되면 나머지 매개변수는  undefined 값으로 설정된다.
 
-# 가변길이 전달인자 목록 : Argument객체
+# 가변길이 전달인자 목록 : Arguments객체
 함수가 호출될 때 정의된 매개변수보다 더 많은 인자가 전달되면, 매개변수이름이 붙지 않은 인자값을 직접적으로 참조할 방법이 없다.
 Argument객체는 이것을 해결해 준다.인덱스 숫자를 통해 함수의 전달 인자를 얻어 올 수 있다.
 <pre>
