@@ -73,7 +73,7 @@ $(':hadder').map(function(){return this.id}).get().sort();
 
 # 가변길이 전달인자 목록 : Arguments객체
 함수가 호출될 때 정의된 매개변수보다 더 많은 인자가 전달되면, 매개변수이름이 붙지 않은 인자값을 직접적으로 참조할 방법이 없다.
-Argument객체는 이것을 해결해 준다.인덱스 숫자를 통해 함수의 전달 인자를 얻어 올 수 있다.
+Arguments객체는 이것을 해결해 준다.인덱스 숫자를 통해 함수의 전달 인자를 얻어 올 수 있다.
 <pre>
 function max (/*...*/){
   var max = Number.NEGATIVE_INFINITY;
