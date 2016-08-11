@@ -212,7 +212,7 @@ var message = "hi",
 + 문자열
 
 ##### typeof연산자: 이 연산자를 적용하면 다음 문자열 중 하나를 반환합니다.
-+ 정의되지 않ㅇ느 변수 : "undefined"
++ 정의되지 않는 변수 : "undefined"
 + 불리언 : "boolean"
 + 문자열 : "string"
 + 숫자 : "number"
