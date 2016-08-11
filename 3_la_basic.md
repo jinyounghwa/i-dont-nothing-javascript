@@ -44,18 +44,18 @@ if (test) {
 
 키워드와 예약어
 키워드들은 다음과 같습니다.   
-<|break|do|instanceof|typeof|
-|case|else|new|var|
-|catch|finally|return|void|
-|continue|for|switch|while|
-|debugger|function|this|with|
-|default|if|throw|delete|
-|in|try|-|-|>
+| break | do | instanceof | typeof | 
+| case | else | new | var | 
+| catch | finally | return | void | 
+| continue | for | switch | while |
+| debugger | function | this | with | 
+| default |if | throw | delete | 
+| in|try | - | - | 
 예약어들은 다음과 같습니다.
-<|abstract|enum|int|short|
-|boolean|export|interface|static|
-|byte|extends|long|super|
-|char|final|native|synchornized|
-|class|goto|private|transient|
-|debugger|implemments|protected|volatile|
-|doble|import|public|-|>
+| abstract | enum | int | short | 
+| boolean | export | interface | static | 
+| byte | extends | long | super | 
+| char | final | native | synchornized | 
+| class | goto | private | transient | 
+| debugger | implemments | protected | volatile | 
+| doble | import | public | - | 
