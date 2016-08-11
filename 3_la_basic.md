@@ -128,3 +128,101 @@ if (test) {
 <td>-</td>
 </tr>
   </table>
+5판에서는 예약어 규칙이 바뀌어서 모드에 따라 예약어가 다릅니다. 다음 목록은 일반 모드에서 예약어로 사용하는 단어입니다.
+<table>
+<tr>
+  <td>class</td>
+  <td>enum</td>
+  <td>extends</td>
+  <td>super</td>
+</tr>
+<tr>
+  <td>const</td>
+  <td>export</td>
+  <td>import</td>
+  <td> - </td>
+</tr>
+</table>
+스트릭트 모드에는 다음 예약어가 추가 됩니다.
+<table>
+<tr>
+<td>implemments</td>
+<td>packge</td>
+<td>public</td>
+<td>interface</td>
+</tr>
+<tr>
+<td>private</td>
+<td>static</td>
+<td>let</td>
+<td>protected</td>
+</tr>
+<tr>
+<td>yield</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+</table>
+ECMA-262 5판에는 키워드와 예약어가 바뀐것 이외에도 eval과 arguments에 제한이 추가되었습니다.
+
+변수
+ECMAscript 는 느슨한 변수타입을 사용하는데, 이 말은 변수에 어떤 타입의 데이터라도 저장할 수 있다는 의미
+var 는 키워드이며 변수 이름은 식별자 입니다.
+<pre>
+var message;
+</pre>
+이 코드는 message라는 이름의 변수를 의미하며 해당 변수에는 어던 값이든 할당 할 수 있다. 초기화 하지 않으면 undefined할당됨
+<pre>
+var message = "hi";
+</pre>
+위 코드는 message변수가 문자열 값 hi를 저장한 것으로 정의함 (문자열 타입을 지정한 것은 아님)
+<pre>
+var message = "hi";
+message = 100; // 유효하지만 권장안함
+</pre>
+아래는 함수를 종료하는 즉시 파괴되는 예
+<pre>
+function test() {
+  var message = "hi"; //전역변수
+}
+test();
+alert(message); // 에러
+</pre>
+var 연산자를 생략하면 전역이 된다.
+<pre>
+function test() {
+  message = "hi";
+}
+test();
+alert(message);
+</pre>
+변수를 여러 개 선언하려면 쉼표로 구분하여 한 문장으로 선언 할 수 있습니다.
+<pre>
+var message = "hi",
+    found = false,
+    age = 29;
+</pre>
+데이터 타입
+원시 데이터 타입
++ undefined
++ null
++ boolean
++ 숫자
++ 문자열
+
+##### typeof연산자: 이 연산자를 적용하면 다음 문자열 중 하나를 반환합니다.
++ 정의되지 않ㅇ느 변수 : "undefined"
++ 불리언 : "boolean"
++ 문자열 : "string"
++ 숫자 : "number"
++ 함수를 제외한 객체 또는 null : "object"
++ 함수 : "function"
+기술적으로 함수는 객체로 간주되고 함수에는 다른 객체에 없는 특별한 프로퍼티가 존재하므로
+typeof 연산자가 함수를 다른 객체와 구별해 반환하는것이 합리적이라고 함
+<pre>
+var message = "some string";
+alert(typeof message); // "string"
+alert(typeof (message)); // "string"
+alert(typeof 95); //"number"
+</pre>
