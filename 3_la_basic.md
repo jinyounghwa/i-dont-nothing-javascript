@@ -44,13 +44,45 @@ if (test) {
 
 키워드와 예약어
 키워드들은 다음과 같습니다.   
-| break | do | instanceof | typeof | 
-| case | else | new | var | 
-| catch | finally | return | void | 
-| continue | for | switch | while |
-| debugger | function | this | with | 
-| default |if | throw | delete | 
-| in|try | - | - | 
+<table>
+    <tr>
+    <td>break</td>
+    <td>do</td>
+    <td>instanceof</td>
+    <td>typeof</td>
+    <td></td>
+  </tr>
+  <tr>
+  <td>case</td>
+  <td>else</td>
+  <td>new</td>
+  <td>var</td>
+</tr>
+<tr>
+<td>catch</td>
+<td>finally</td>
+<td>return</td>
+<td>void</td>
+</tr>
+<tr>
+<td>continue</td>
+<td>for</td>
+<td>switch</td>
+<td>while</td>
+</tr>
+<tr>
+<td>debugger</td>
+<td>function</td>
+<td>this</td>
+<td>with</td>
+</tr>
+<tr>
+<td>in</td>
+<td>try</td>
+<td>-</td>
+<td>-</td>
+</tr>
+</table>
 예약어들은 다음과 같습니다.
 | abstract | enum | int | short | 
 | boolean | export | interface | static | 
