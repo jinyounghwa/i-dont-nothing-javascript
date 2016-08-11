@@ -84,10 +84,47 @@ if (test) {
 </tr>
 </table>
 예약어들은 다음과 같습니다.
-| abstract | enum | int | short | 
-| boolean | export | interface | static | 
-| byte | extends | long | super | 
-| char | final | native | synchornized | 
-| class | goto | private | transient | 
-| debugger | implemments | protected | volatile | 
-| doble | import | public | - | 
+<table>
+    <tr>
+    <td>abstract</td>
+    <td>enum</td>
+    <td>int</td>
+    <td>short</td>
+  </tr>
+  <tr>
+  <td>boolean</td>
+  <td>export</td>
+  <td>interface</td>
+  <td>static</td>
+</tr>
+<tr>
+<td>byte</td>
+<td>extends</td>
+<td>long</td>
+<td>super</td>
+</tr>
+<tr>
+<td>char</td>
+<td>final</td>
+<td>native</td>
+<td>synchornized</td>
+</tr>
+<tr>
+<td>class</td>
+<td>goto</td>
+<td>private</td>
+<td>transient</td>
+</tr>
+<tr>
+<td>debugger</td>
+<td>implemments</td>
+<td>protected</td>
+<td>volatile</td>
+</tr>
+<tr>
+<td>doble</td>
+<td>import</td>
+<td>public</td>
+<td>-</td>
+</tr>
+  </table>
