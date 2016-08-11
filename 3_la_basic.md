@@ -50,7 +50,7 @@ if (test) {
     <td>do</td>
     <td>instanceof</td>
     <td>typeof</td>
-    <td></td>
+
   </tr>
   <tr>
   <td>case</td>
