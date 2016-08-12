@@ -339,3 +339,44 @@ alert(isNaN(true)); // false - 숫자 1로 바꿀 수 있다.
 </pre>
 
 숫자로 바꿀 수 없는 것이나 NaN 자체인 경우 true / 숫자로 바꿀수 있는 경우 false를 반환
+
+숫자 변환
+Number() 함수는 다음 규칙에 의하여 변환한다.
++ 매개변수로 불리언 값을 넘겼다면 true와 false를 각각 1과 0으로 반환한다.
++ 매개변수로 숫자를 넘겼다면 0을 반환한다.
++ 매개변수로 null을 넘겼다면 0을 반환한다.
++ 매개변수로 undefined를 넘겼다면 NaN을 반환한다.
++ 매개변수로 문자열을 넘겼다면 다음 규칙을 따른다.
+- 문자열이 숫자로만 구성되었다면 10진수로 변환한다. "1" -> 1 "123"-> 123 "011"-> 11
+- 문자열이 "1.1" 같은 유효한 부동소수점 숫자 형식이라면 해당하는 부동수점 숫자를 반환한다.
+- 문자열이 "0xf"같은 유효한 16진수 형식이라면 그에 해당하는 정수를 반환한다.
+- 빈 문자열이면 0을 반환한다.
+- 앞에서 실행한 형식이 아니라면 0을 반환한다.
+
+<pre>
+var num1 = Number("Hello world") // NaN
+var num2 = Number('') // 0
+var num3 = Number("000011") //11
+var num4 = Number(true) //1
+</pre>
+
+parseInt() 함수는 정수형태의 문자열을 숫자로 바꿀 때 사용된다.
+<pre>
+var num1 = parseInt("123blue") //123
+var num2 = parseInt("") // NaN
+var num3 = parseInt("0xA") // 16진수 10
+var num4 = parseInt(22.5) //22
+var num5 = parseInt("70") //70
+var num6 = parseInt(0xf) // 16진수 15
+</pre>
+
++ 두번째 매개변수로 16진수 형식임을 미리 전달 할 수 있다.
+<pre>
+var num = parseInt("0xAF",16) //두번째 매개변수인 16을 넘겨서 첫번째 매개변수가 16진수임을 알려준다.
+</pre>
+
++ 두번째 매개변수에서 16진수임을 명기하면 앞에 0x는 생략해도 된다.
+<pre>
+var num1 = parseInt("AF", 16) // 175
+var num2 = parseInt("AF") // 진수를 표기하지 않음(두번째매개변수가 없음) NaN
+</pre>
