@@ -380,3 +380,63 @@ var num = parseInt("0xAF",16) //두번째 매개변수인 16을 넘겨서 첫번
 var num1 = parseInt("AF", 16) // 175
 var num2 = parseInt("AF") // 진수를 표기하지 않음(두번째매개변수가 없음) NaN
 </pre>
+
+parseFloat() 함수는 0번째 위치부터 각 문자를 변환하는 점에서 parseInt와 비슷하나 정수를 제외한 나머지는 무시한다.
+
+<pre>
+var num1 = parseFloat("1234blue") // 1234
+var num2 = parseFloat("0xA") //0
+var num3 = parseFloat("22.5") // 22.5
+var num4 = parseFloat("22.34.5") //22.34
+var num5 = parseFloat("0908.5") // 908.5
+var num6 = parseFloat("3.125e7") //31250000
+</pre>
+
+문자 리터럴
+문자열 데이터 타입 중 몇 가지 유용한 문자 리터럴을 다음 표에 요약한다.
+<table>
+<tr>
+<th>리터럴</th>
+<th>의미</th>
+</tr>
+<tr>
+  <td>\n</td>
+  <td>줄바꿈</td>
+</tr>
+<tr>
+  <td>\t</td>
+  <td>탭</td>
+</tr>
+<tr>
+  <td>\b</td>
+  <td>백스페이스</td>
+</tr>
+<tr>
+  <td>\r</td>
+  <td>캐리지리턴(리턴)</td>
+</tr>
+<tr>
+  <td>\f</td>
+  <td>폼피드</td>
+</tr>
+<tr>
+  <td>\\</td>
+  <td>역슬레시</td>
+</tr>
+<tr>
+  <td>\'</td>
+  <td>작은따음표 - 작은따음표로 감싼 문자열 안에서 작은 따음표를 사용해야 할 때 사용</td>
+</tr>
+<tr>
+  <td>\"</td>
+  <td>16진수 코드 'nn'을 표기 n은 0에서부터 </td>
+</tr>
+<tr>
+  <td>\xnn</td>
+  <td></td>
+</tr>
+<tr>
+  <td>\unnn</td>
+  <td></td>
+</tr>
+</table>
