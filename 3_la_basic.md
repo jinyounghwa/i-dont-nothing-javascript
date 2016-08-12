@@ -429,14 +429,14 @@ var num6 = parseFloat("3.125e7") //31250000
 </tr>
 <tr>
   <td>\"</td>
-  <td>16진수 코드 'nn'을 표기 n은 0에서부터 </td>
+  <td>큰 따음표</td>
 </tr>
 <tr>
   <td>\xnn</td>
-  <td></td>
+  <td>16진수 코드 'nn'을 표기 n은 0에서부터 f까지 16진수</td>
 </tr>
 <tr>
   <td>\unnn</td>
-  <td></td>
+  <td>16진수표현</td>
 </tr>
 </table>
