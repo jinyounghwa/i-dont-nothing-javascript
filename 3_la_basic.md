@@ -226,3 +226,116 @@ alert(typeof message); // "string"
 alert(typeof (message)); // "string"
 alert(typeof 95); //"number"
 </pre>
+
+undefined타입
+var 변수를 사용하여 정의하였지만 초기화하지 않으면 undefined가 할당됨
+<pre>
+var message;
+alert (message == undefined); //true
+//변수는 실행되었지만 초기화 되지는 않음
+
+var message = undefined;
+alert(message == undefined); // true
+// 기본적으로 이렇게 항상 초기화 되기 때문에 이렇게 할 필요는 없음
+</pre>
+
+<pre>
+var message ; // 변수는 선언되었지만 값은 undefined
+
+// var age - 정의하지 않음
+alert(message); //undefined
+alert(age); // 에러
+</pre>
+정의하지 않은 변수에 유의미한 조작은 typeof 뿐임
+<pre>
+var message;  // 변수는 선언되었지만 값은 undefined
+// var age - 정의하지 않음
+
+alert(typeof message); // undefined
+alert(typeof age); // undefined
+</pre>
+
+null 타입
+typeof 를 호출하면 object를 반환하는게 특징
+<pre>
+alert(null == undefined); // true
+</pre>
+이렇게 나오는 이유는 == 연산자가 피 연산자를 비교할 때 암묵적으로 타입변환을 하기 때문
+변수의 값에 명시적으로 undefined는 할당하면 안돼지만 null은 다름 객체를 이용할 수 없을때
+null 을 오게 할 수도 있음
+
+불리언 타입
+ECMAscript에서는 모든 타입을 불리언 값으로 표현 할 수 있다.
+<pre>
+var message = "Hello world";
+var messageAsBoolean = Boolean(message);
+</pre>
+이 예제에서는 문저일 message가 불리언 값으로 변환되어 messageAsBoolean에 저장된다.
+Boolean() 함수는 어떤 타입의 데이터에서도 호출 할 수 있고 항상 불리언 값을 반환한다.
+<table>
+<tr>
+<th>데이터 타입</th>
+<th>true로 반환하는 값</th>
+<th>false로 반환하는 값</th>
+</tr>
+<tr>
+<td>불리언</td>
+<td>true</td>
+<td>true</td>
+</tr>
+<tr>
+<td>문자열</td>
+<td>비어있지않은 문자열 모두</td>
+<td>""(빈 문자열)</td>
+</tr>
+<tr>
+<td>숫자</td>
+<td>0이 아닌 숫자, 무한대 포함</td>
+<td>0,NaN</td>
+</tr>
+<tr>
+<td>객체</td>
+<td>모든객체</td>
+<td>null</td>
+</tr>
+<tr>
+<td>undefined</td>
+<td>해당없음</td>
+<td>undefined</td>
+</tr>
+</table>
+if 문 같은 제어문은 다음과 같이 타입을 자동으로 불리언으로 바꾸므로 위 표에서 설명한 변환 규칙을 이해할것
+
+<pre>
+var message = "Hello world";
+if (message) {
+  alert("Value is true");
+}
+</pre>
+이 예제에서는 alet가 표시되는데 message에 저장된 문자열이 자동으로 불리언 true로 바뀌기 때문
+불리언을 써야하는데 실수로 객체로 쓰면 항상 true값이 되기때문에 주의해야 함
+
+숫자타입
+숫자를 계산 할 때 항상 10진수로 변환하여 계산
+가능하면 정수로 계산하는것을 권장
+평가할 때 소수점으로 평가하지 않음
+<pre>
+if(a+b == 0.3){ // 이렇게 하지 말라는이야기
+  alert("you got 0.3")
+}
+</pre>
+범위를 벗어나는 숫자  -infinity / infinity
+
+NaN
+숫자를 반환한 값으로 의도한 조작이 실패하였을 때 반환하는 값
+에러를 반환하는 것이 아님
+isNaN() 은 매개 변수를 하나 받으며 숫자가 아닌 값인지 검사한다.
+<pre>
+alert(isNaN(NaN)); //true
+alert(isNaN(10)); //false - 10 은 숫자입니다.
+alert(isNaN("10")); // false - 숫자 10으로 바꿀 수 없다 "10" 은 문자로 인식되지만 숫자로 바꿀 수 있기 때문
+alert(isNaN("blue")); // true - 문자열이기에 숫자로 바꿀 수 없다.
+alert(isNaN(true)); // false - 숫자 1로 바꿀 수 있다.
+</pre>
+
+숫자로 바꿀 수 없는 것이나 NaN 자체인 경우 true / 숫자로 바꿀수 있는 경우 false를 반환
