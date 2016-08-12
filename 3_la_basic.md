@@ -440,3 +440,49 @@ var num6 = parseFloat("3.125e7") //31250000
   <td>16진수표현</td>
 </tr>
 </table>
+이들 문자 리터럴은 문자열 속 어디에든 쓸 수 있으며 다음과 같이 한 문자로 취급 된다.
+<pre>
+var text = "this is the letter sigma:\u0303"
+</pre>
+
+문자열의 성질
+ECMAscript에서 문자열의 성질은 불변 (문자열이 일단 만들어지면 그 값을 바꿀 수 없음)
+
+문자열 변환 방법
++ 거의 모든 값에 존재하는 toString() 매서드를 사용하는 방법
+<pre>
+var age = 11;
+var ageAsString = age.toString(); // 문자열 "11"
+var found = true;
+var foundAsString = found.toString();// 문자열 "true"
+</pre>
+toString() 매서드는 숫자와 불리언, 객체, 문자열 값에 존재한다.(문자열에도 toString()매서드가 있고 이를 호출하면 단순히 자신을 반환)
+null과 undefined에는 이 매서드가 존재하지 않는다.
+toString() 매서드는 매개변수를 하나 사용 할 수 있으며 이 매개변수는 진법을 나타내는 숫자이다.
+
++ toString()함수의 규칙
+- 값에 toString()매서드가 존재 한다면 이를 매개변수 없이 호출하여 그 결과를 반환한다.
+- 값이 null 이라면 "null" 을 반환한다.
+- 값이 undefined 라면 "undefined" 를 반환한다.
+<pre>
+var value1 = 10;
+var value2 = true;
+var value3 = null;
+var value4;
+
+alert(String(value1)); // "10"
+alert(String(value2)); //"true"
+alert(String(value3)); // "null"
+alert(String(value4)); // "undefined"
+</pre>
+여기에서 숫자와 불리언 null, undefined 네 가지 값을 문자열로 변환 했다. 숫자와 불리언을 변환한 결과는 toString()매서드를
+호출할 때와 같다. "null" 이나 "undefined"에는 toString()매서드가 존재하지 않으므로 String 매서드는 단순하게 리터럴 텍스트를 반환한다.
+
+객체 타입
++ constructor -  해당 객체를 만드는 데 쓰인 함수로 var o = new Object(); 라면 Object() 가 생성자이다.
++ hasOwnProperty(propertyName) - 해당 프로퍼티가 객체 인스턴스에 고유 존재 하며 프로타입에서 상속하지 않았음을 확인한다. 프로퍼티 이름은 반드시 문자열이어야 하며 o.hasOwnProperty('name')같은 형식으로 호출한다.
++ ispropettyOf(object) - 해당 객체가 다른 객체의 프로토타입인지 확인한다.
++ ispropettyIsEnumerable(propertyName) - 해당프로퍼티를 for-in 문에서 나열할 수 있는지 확인한다.
++ toLocalString() - 객체를 지역에 맞게 표현한 문자열을 반환한다.
++ toString() - 객체를 문자열로 변환해 반환한다.
++ valueOf() - 객체를 나타내는 문자열이나 숫자, 불리언을 반환한다.
