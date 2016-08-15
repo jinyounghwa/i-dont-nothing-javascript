@@ -249,3 +249,72 @@ var myObject = preferredObject || backupObject;
 이 예제에서는 변수 myObject에 두 값 중 하나가 할당되며 preferredObject변수에는 가능하다면 사용하고 싶은값이 저장되고
 backupObject에는 사용하고자 하는 값을 이용할 수 없을 때 대신 쓸 값이 들어 있다. preferredObject 가 null이 아니라면
 myObject에는 preferredObject에 할당된다 null일 경우 backupObject에 할당된다.
+
+동일 연산자
+두 변수가 동일한지 판단하는 일은 프로그래밍에서 중요한 부분을 차지한다. == 연산자는 동일 연산자로 불리며 === 연산자는 일치 연산자로 불린다.
+문자열이나 숫자, 불리언 값에는 두 값이 동일한지 알아보기 매우 간단하지만 객체는 복잡한 문제이기 때문에 이런 표현을 사용한다.
+
+동일과 비동일
+== 연산자와 === 연산자는 피연산자를 비교하기 전에 타입강제 하여 변환한다.
+변환할 때는 다음과 같은 규칙을 따른다.
++ 피연산자가 불리언 값일 때는 숫자형 값으로 변환된다. false는 0이 되고 true는 1이 된다.
++ 피연산자가 하나가 문자열이고 다른 하나가 숫자라면 문자열을 숫자로 바꿀 수 있는지 시도한다.
++ 피연산자 중 하나가 객체이고 다른 하나가 객체가 아니라면 객체의 valueOf() 매서드를 호출해 원시 값으로 바꾼 후 이전규칙을 따른다.
+비교할 때는 다음과 같은 규칙을 따른다.
++ null과 undefined는 동일하다.
++ 동일 여부를 평가 할 때 null과 undefined를 결코 다른 값으로 변환하지 않는다.
++ 피연산자 중 하나가 NaN이라면 동일연산자는 false를 반환하며 비동일 연산자는 true를 반환한다. 피연산자가 모두 NaN이라도 동일 연산자(==)는
+false를 반환한다. NaN은 NaN과 같지 않다.
++ 두 피연산자가 객체라면 같은 객체인지 비교한다. 두 피연산자가 모두 같은 객체에대한 참조를 가르키면 동일 연산자는 true를 반환하며 그렇지 않다면
+false를 반환한다.  
+
+<table>
+<tr>
+<th>표현식</th>
+<th>값</th>
+</tr>
+<tr>
+<td>null == undefined</td>
+<td>true</td>
+</tr>
+<tr>
+<td>"NaN" == Nan</td>
+<td>false</td>
+</tr>
+<tr>
+<td>5 == NaN</td>
+<td>false</td>
+</tr>
+<tr>
+<td>NaN == NaN</td>
+<td>false</td>
+</tr>
+<tr>
+<td>NaN !== NaN</td>
+<td>true</td>
+</tr>
+<tr>
+<td>false == 0</td>
+<td>true</td>
+</tr>
+<tr>
+<td>true == 1</td>
+<td>true</td>
+</tr>
+<tr>
+<td>true == 2</td>
+<td>false</td>
+</tr>
+<tr>
+<td>undefined == 0</td>
+<td>false</td>
+</tr>
+<tr>
+<td>null == 0</td>
+<td>false</td>
+</tr>
+<tr>
+<td>"5" == 5</td>
+<td>true</td>
+</tr>
+</table>
