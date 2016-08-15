@@ -67,9 +67,6 @@ while (i<count) {
   i++;
 }
 // while루프가 할 수 없는것은 for 루프로도 불가능하다.
-</pre>
-
-<pre>
 var count = 10;//for 루프 밖에서 초기화
 var i;
 for (i = 0; i < count;i++){
