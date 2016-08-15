@@ -101,3 +101,65 @@ b = -b; // 0
 f = -f; // 1.1
 o = -o; // -1
 </pre>
+
+논리 NOT
+논리 NOT연산자는 느낌표(!) 로 표시하며 ECMAscript의 모든 값에 적용될 수 있다. 논리 NOT연산자는 데이터 값에 관계없이
+항상 블리언 값을 반환한다. 논리 NOT연산자는 먼저 피 연산자를 블리언 값으로 변환한 다음 그 결과를 부정하며 다음과 같이 동작한다.
++ 피연산자가 객체이면 false를 반환한다.
++ 피연산자가 빈 문자열이면 true를 반환한다.
++ 피연산자가 비어있지 않은 문자열이면 false를 반환한다.
++ 피연산자가 숫자0이면 true를 반환한다.
++ 피연산자가 0이 아닌 숫자(infinity포함)라면 false를 반환한다.
++ 피연산자가 null 이면 true를 반환한다.
++ 피연산자가 NaN이면 true를 반환한다.
++ 피연산자가 undefined이면 true를 반환한다.
+<pre>
+alert(!false); // true
+alert(!"blue"); // false
+alert(!NaN); //true
+alert(!""); // true
+alert(!12345); //false
+</pre>
+
+논리 NOT연산자는 값을 블리언 타입으로 바꾸는데도 유용하다. 연달아 2개를 쓰면 Boolean() 함수를 쓴 것과 같다.
+<pre>
+alert(!!"blue"); // true
+alert(!!0); // false
+alert(!!NaN); //false
+alert(!!""); // false
+alert(!!12345); //false
+</pre>
+
+논리 AND
+논리 AND연산자는 앰퍼센드 2개(&&)이다.
+<pre>
+var result = true && false;
+</pre>
+논리 AND연산자는 다음 표에 해당하는 값을 반환한다.
+<table>
+<tr>
+  <th>피연산자 1</th>
+  <th>피연산자 2</th>
+  <th>결과</th>
+</tr>
+<tr>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+</tr>
+<tr>
+<td>true</td>
+<td>false</td>
+<td>true</td>
+</tr>
+<tr>
+<td>false</td>
+<td>true</td>
+<td>false</td>
+</tr>
+<tr>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+</tr>
+</table>
