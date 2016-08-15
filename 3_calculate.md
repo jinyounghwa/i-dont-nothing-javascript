@@ -199,7 +199,8 @@ var result = true || false;
 + 두번째 피연산자가 모두 객체라면 첫 번째 피연산자를 반환한다.
 + 두번째 피연산자가 모두 null이면 null을 반환한다.
 + 두번째 피연산자가 모두 NaN이면 Nan을 반환한다.
-+ 두번째 피연산자가 모두 undefined라면 undefined를 반환한다.
++ 두번째 피연산자가 모두 undefined라면 undefined를 반환한다.  
+
 <table>
 <tr>
   <th>피연산자 1</th>
