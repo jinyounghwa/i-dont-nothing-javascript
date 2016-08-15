@@ -163,3 +163,88 @@ var result = true && false;
 <td>false</td>
 </tr>
 </table>
+논리 AND는 피연산자가 블리언 값이 아니라도 사용할 수 있다. 다만 피연산자 중 하나가 불리언이 아닐 때는 다음과 같이 동작하며
+논리 AND가 불리언 값을 반환하지 않을 수도 있다.
++ 첫 번째 피연산자가 객체라면 항상 두 번째 피연산자를 반환한다.
++ 두 번째 피연산자가 객체라면 첫 번째 피연산자를 true로 평가할 수 있을 때만 두 번째 피연산자를 반환한다.
++ 두 번째 피연산자 모두 객체라면 두 번째 피연산자를 반환한다.
++ 피연산자 들 중 하나라도 null이면 null을 반환한다.
++ 피연산자 둘 중 하나라도 undefined라면 undefined를 반환한다.
+
+첫 번째 피연산자에서 결과를 정할 수 있다면 논리 AND연산자는 두 번째 피연산자를 결코 평가하지 않는다.
+논리 AND에서 첫 번째  피연산자가 false라면 두번째 피연산자의 값과는 무관하게 결과는 절대 true일 수 없다.
+<pre>
+var found = true;
+var result = (found && someUndeclaerVariable); // 여기에서 에러 발생
+alert(result); // 이 행은 실행되지 않는다.
+</pre>
+이 코드는 논리 AND를 평가하면서 에러를 일으키는데 변수 someUndeclaerVariable가 선언되지 않았기 때문이다.
+found값이 true이므로 AND연산자는 변수 someUndeclaerVariable를 평가하며 이 단계에서 someUndeclaerVariable변수가
+선언되지 않았기 때문에 에러가 발생한다.
+<pre>
+var found = false;
+var result = (found && someUndeclaerVariable); // 에러 없음
+alert(result); // 동작한다.
+</pre>
+결과가 반드시 false가 되면 &&의 오른쪽을 반드시 평가할 이유는 없다. 사용방법에 따라 이렇게 변형하여 사용 할 수 있다.
+
+논리 OR
+ECMAscript에서 논리 OR연산자는 다음과 같이 파이프 두개 (||)로 표현된다.
+<pre>
+var result = true || false;
+</pre>
+논리 AND와 마찬가지로 피연산자 중 하나가 아니라면 논리 OR에서 불리언 값을 반환하지 않을 수 있다.
++ 첫번째 피연산자가 객체라면 첫 번째 피연산자를 반환한다.
++ 첫번째 피연산자가 false이면 두 번째 피연산자를 반환한다.
++ 두번째 피연산자가 모두 객체라면 첫 번째 피연산자를 반환한다.
++ 두번째 피연산자가 모두 null이면 null을 반환한다.
++ 두번째 피연산자가 모두 NaN이면 Nan을 반환한다.
++ 두번째 피연산자가 모두 undefined라면 undefined를 반환한다.
+<table>
+<tr>
+  <th>피연산자 1</th>
+  <th>피연산자 2</th>
+  <th>결과</th>
+</tr>
+<tr>
+<td>true</td>
+<td>true</td>
+<td>true</td>
+</tr>
+<tr>
+<td>true</td>
+<td>false</td>
+<td>true</td>
+</tr>
+<tr>
+<td>false</td>
+<td>true</td>
+<td>false</td>
+</tr>
+<tr>
+<td>false</td>
+<td>false</td>
+<td>false</td>
+</tr>
+</table>
+
+<pre>
+var found = true;
+var result = (found || someUndeclaerVariable) // 에러 없음
+alert(result); //동작한다.
+</pre>
+이전과 마찬가지로 someUndeclaerVariable는 정의되지 않았지만 첫번째 변수가 true이므로 두번째 변수someUndeclaerVariable를
+평가하지 않고 true를 반환한다.
+<pre>
+var found = false;
+var result = (found || someUndeclaerVariable) // 에러 발생
+alert(result); //동작하지 않음
+</pre>
+
+논리 OR연산자의 행동을 이용해서 변수에 null나 undefined가 저장되지 않게 할 수 있다.
+<pre>
+var myObject = preferredObject || backupObject;
+</pre>
+이 예제에서는 변수 myObject에 두 값 중 하나가 할당되며 preferredObject변수에는 가능하다면 사용하고 싶은값이 저장되고
+backupObject에는 사용하고자 하는 값을 이용할 수 없을 때 대신 쓸 값이 들어 있다. preferredObject 가 null이 아니라면
+myObject에는 preferredObject에 할당된다 null일 경우 backupObject에 할당된다.
