@@ -89,3 +89,28 @@ for (;i < count;){
 }
 </pre>
 
+for-in 문   
+for-in문은 엄격한 반복문으로 객체의 프로퍼티를 나열하는데 사용한다.
+<pre>
+for(property in expression) statement
+// 실제 사용은 다음과 같다.
+for (var propName in window) {
+  document.write(propName);
+}
+</pre>
+여기에서 for-in문은 BOM window객체의 모든 프로퍼티를 표시한다. 루프를 샐행할 때마다 propName변수에 window객체의 프로퍼티
+이름이 저장된다. 이 과정은 객체의 프로퍼티를 모두 나열할 때까지 계속된다 for 문과 마찬기자로 for-in문 역시 제어부에서 반드시
+var 키워드를 써야 하는것은 아니지만, 지역변수를 이용하게 하려면 var 키워드를 권장한다.  나열할 수 있는 프로퍼티는 모두 반환되지만
+그 순서는 브라우저에 따라 다를 수 있다. null/undefined를 나열 할 경우 에러를 내고  ES5부터는 루프본문을 실행하지 않게 변경되었다.
+for-in루프를 실행하기 전에 객체를 가리키는 변수의 값이 null/undefined인지 확인하는것을 권장한다.
+
+문장 레이블
+다음 문법에 따라 문장에 레이블을 붙였다가 나중에 사용할 수 있다.
+<pre>
+label : statement
+//실제 사용은 다음과 같다.
+start : for (var i=0; i < count; i++) {
+  alert(i);
+}
+//이 예제에서 사용한 레이블 start를 나중에 break나 continue문에서 참조할 수 있다. 문장레이블은 중첩된 루프에서 일반적으로 사용한다.
+</pre>
