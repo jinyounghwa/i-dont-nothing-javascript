@@ -62,7 +62,7 @@ while 문과 마찬가지로 루프 본문의 코드를 실행하지 않을 때�
 <pre>
 var count = 10;
 var i =0;
-while (i<count) {
+while (i < count) {
   alert(i);
   i++;
 }
