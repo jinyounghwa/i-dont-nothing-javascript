@@ -130,3 +130,124 @@ alert(num); //4
 </pre>
 이 코드에서 for루프는 변수 i를 1부터 10까지 증가시킨다. 루프 본문에서 if문 으로 i 값이 5의 배수인지 확인한다. 5의 배수라면 break문이
 실행되고 루프에서 빠져나온다. num변수는 0에서 시작되었으며 루프를 몇번 실행했는지 나타내는 값을 저장한다.
+break문 다음에 실행할 코드, 즉 루프 다음줄의 alert에서 4를 표시한다. i가 5가 되었을 때 break문이 num을 증가시키기 전에
+르프를 빠져나가기 때문에 루프는 4번 실행된다. break를 continue로 바꾸면 결과가 달라진다.
+<pre>
+var num = 0;
+for (var i=1; i < 10; i++) {
+  if ( i % 5 == 0) {
+    continue;
+  }
+  num++
+}
+alert(num); //8
+</pre>
+이 코드에서는 루프가 8회 실행된다. i의 값이 5가 되면 루프에서 빠져나오며 num의 값은 6이다. 루프는 i가 10이 될때까지 돈다.
+num의 마지막 값은 8인데 continue문 때문에 한번 빠져 나갔기 때문에 9가 아니라 한번 더 적은 8이다.
+break문과 continue문을 문장 레이블과 함께 사용하면 코드의 특정 위치로 이동 할 수 있다.
+<pre>
+var num = 0;
+outermost:
+for (var i=0;i < 10;i++) {
+  for (var j=0; j < 10 ; j++) {
+    if (i == 5 && j == 5) {
+      break outermost;
+    }
+    num++;
+  }
+}
+alert(num); // 55
+</pre>
+이 예제에서 outermost레이블은 첫번째 for문을 가리킨다. 각 루프는 10회씩 실행되고 num++문장은 100회 실행된다.
+따라서 실행이 끝나면 num은 100 이 된다. 그러나 이 코드의 break문은 매개변수로 레이블을 받았다.
+i와 j가 모두 5인 시점에서 실행이 멈춰버리므로 num의 값은 55가 된다.
+<pre>
+var num = 0;
+outermost :
+for (var i = 0; i < 10; i++) {
+  for (var j = 0; j < 10; j++) {
+    if (i == 5 && j == 5){
+      continue outermost;
+    }
+    num++
+  }
+}
+alert(num); // 95
+</pre>
+이 코드에서 continue문은 실행을 강제하는데 내부 루프가 아니라 외부 루프의 실행을 강제한다. j가 5가 되면 continue문이 실행되고
+내부루프는 다섯번의 실행을 건너뛰므로 num은 100이 아니라 95가 된다.
+
+switch문
+switch문도 다른언어에서 가져왔으며 if문과 관련이 깊다.
+<pre>
+switch (expression) {
+  case value : statement
+  break;
+  case value : statement
+  break;
+  case value : statement
+  break;
+  case value : statement
+  break;
+  default : statement
+}
+</pre>
+switch문의 각 case는 표현식이 value와 일치하면 statement문을 실행하라는 의미이며 break키워드는 코드 실행을 멈추고 문을 빠져나가라는 뜻이다.
+break키워드를 쓰지 않으면 다음 case를 계속 평가한다. default키워드는 case중 value로 평가되는 것이 없을 때 실행할 문장이다.
+<pre>
+if ( i == 25 ) {
+  alert("25");
+}else  if ( i == 35){
+  alert("35");
+}else if ( i == 45) {
+  alert("45");
+}else {
+  alert("Other")
+}
+// 다음과 같이 변경할 수 있다.
+switch (i) {
+  case : 25;
+  alert("25");
+  case : 35;
+  alert("35");
+  case : 45;
+  alert("45");
+  default:
+  alert("Other")
+}
+</pre>
+case문마다 주석을 달아서 진행을 알려주는것이 좋다.
+switch문은 다른언에서 차용하긴 했지만 ECMAscript만의 고유한 특징이 있다. 모든 데이터 타입에서 동작하므로 문자열과 객체에서 사용할 수 있다.
+대부분의 언어에스는 숫자타입에만 사용할 수 있다. 또한 둘째 값은 상수일 필요가 없고 변수나 표현식도 쓸 수있다.
+<pre>
+switch ("Hello world") {
+  case "Hello" + "world":
+  alert("Greeting was found");
+  break;
+  case "goodbye":
+  alert("Closing was found");
+  break;
+  default:
+  alert("Unexpected message was found");
+}
+</pre>
+이 예제에서는 switch문에 문자열 값을 썼다. 표현식을 사용한 다음과 같은 코드도 사용 할 수 있다.
+<pre>
+var num = 25;
+switch (true) {
+  case num < 0:
+  alert("Less then 0");
+  break;
+  case num >= 0 && num <=10:
+  alert("Between 0 and 10.");
+  break;
+  case num >= 10 && num <= 20:
+  alert("Between 10 and 20");
+  break;
+  default:
+  alert("More than 20.");
+}
+</pre>
+이 코드에서 변수 num은  switch문 밖에서 정의되었다. 각 case문은 불리언 값을 반환하므로 switch문에 매개변수로 true를 넘겼다.
+각 case문을 순서대로 평가하면서 true인 것을 찾거나 default문을 만날 때까지 계속된다.
+또한 switch문은 일치 연산자로 값을 비교하므로 타입 변환은 일어나지 않는다. 문자열 "10"과 숫자 10은 같은것으로 간주한다. 
