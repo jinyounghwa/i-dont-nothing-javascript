@@ -40,3 +40,35 @@ var num2 = num1;
 여기에서 num1에는 값 5가 저장되어 있다. num2를 num1로 초기화 하면 num2에도 값5가 저장된다. 이 값은 복사된 것이기 때문에 num1에 저장된 값과는 완전히 분리되어 있다.
 이 과정을 아래에 그림에 표현하였다. 위의 그림으 복사하기 전의 변수 객체이고 아래의 그림이 복사한 뒤의 변수 객체를 나타낸다.
 ![Minion](https://github.com/jinyounghwa/i-dont-nothing-javascript/blob/master/image/obj1.png)
+참조값을 변수에서 다른 변수로 복사하면 원래 변수에 들어있던 값이 다른 변수에 복사되기는 마찬가지이다. 그 차이는 객체 자체가 아니라 힙(heep)에 저장된 객체를 가리키는 포인터라는 점이다. 조작이 끝나면 두 변수는 정확히 같은 객체를 가리킨다. 따라서 다음 예제처럼 한쪽을 조작하면 다른 쪽에도 반영된다.
+<pre>
+var obj1 = new Object();
+var obj2 = obj1;
+obj.name = "Nicholas";
+alert(obj2.name); //"Nicholas"
+</pre>
+이 예제에서 변수 obj1에 object의 인스턴스를 할당했다. 이 값을 obj2에 복사했으므로 두 변수는 이제 같은 객체를 가리킨다. obj1에 name프로퍼티를 정의하면 obj2에서도 해당 프로퍼티에 접근할 수 있는 두 변수가 같은 객체를 가리키기 때문이다.
+
+매개변수의 전달  
+ECMAscript의 함수 매개변수는 모두 값으로 전달된다. 함수 외부에 있는 값은 함수 내부의 매개변수에 복사되는데, 이는 변수 사이에서 값을 복사하는것과 마찬가지이다. 값이 원시 값이라면 변수사이에서 원시값을 복사하는것과 마찬가지다. 매개변수는 오직 값으로만 전달된다.  
+매겨변수를 값 형태로 넘기면 해당 값은 지역 변수에 복사된다. 즉 이름 붙은 매개변수로 복사되며 ECMAscript에서는 arguments객체의 한 자리를 차지한다. 매개변수를 참조 형태로 넘기면 메모리 상의 값의 위치가 지역 변수에 저장되므로 지역변수를 변경하면 함수 바깥에도 해당 변경내용이 반영된다.
+<pre>
+function addTen(num) {
+  num +=10;
+  return num;
+}
+var count = 20;
+var result = addTen(count);
+alert(count); //20-변동 없음
+alert(result); //30
+</pre>
+이 코드에서 함수 addTen()은 매개변수 num을 넘겨 받는데 이 변수는 기본적으로는 지역 변수이다. 코드를 실행하면 변수 count가 매개변수로 전달된다. 변수의 값은 20이었는데 이 값이 매개변수 num에 복사되어 addTen()내부에서 쓰인다. 함수 내부에서는 매개변수 num에 10을 더해 값을 바꾸지만 함수 외부에 있는 count는 바뀌지 않는다. 매개변수 num과 count는 이제 상관없는 값이 되었다. 물론 우연히 같은 값을 가질 수는 있으나 num을 참조로 전달 했다면 함수 내부의 변화를 반영해 count의 값도 30으로 바뀌었을 것이다 이런 사실은 숫자 같은 원시 값에서는 분명히 드러나지만 객체에서는 그닥 명확하지 않아 보인다. 다음 코드를 보자
+<pre>
+function setName(obj) {
+  obj.name = "Nicholas";
+}
+var person = new person();
+setName(person);
+alert(person.name); // "Nicholas"
+</pre>
+이 코드에서는 객체를 만들어 변수 person에 저장했다 이 객체를 setName() 함수에 넘기면 함수는 해당 객체를 obj에 복사한다. 함수 내부에서는
