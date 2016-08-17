@@ -38,8 +38,10 @@ var num1 = 5;
 var num2 = num1;
 </pre>
 여기에서 num1에는 값 5가 저장되어 있다. num2를 num1로 초기화 하면 num2에도 값5가 저장된다. 이 값은 복사된 것이기 때문에 num1에 저장된 값과는 완전히 분리되어 있다.
-이 과정을 아래에 그림에 표현하였다. 위의 그림으 복사하기 전의 변수 객체이고 아래의 그림이 복사한 뒤의 변수 객체를 나타낸다.
-![Minion](https://github.com/jinyounghwa/i-dont-nothing-javascript/blob/master/image/obj1.png)
+이 과정을 아래에 그림에 표현하였다. 위의 그림으 복사하기 전의 변수 객체이고 아래의 그림이 복사한 뒤의 변수 객체를 나타낸다.  
+
+![Minion](https://github.com/jinyounghwa/i-dont-nothing-javascript/blob/master/image/obj1.png)  
+
 참조값을 변수에서 다른 변수로 복사하면 원래 변수에 들어있던 값이 다른 변수에 복사되기는 마찬가지이다. 그 차이는 객체 자체가 아니라 힙(heep)에 저장된 객체를 가리키는 포인터라는 점이다. 조작이 끝나면 두 변수는 정확히 같은 객체를 가리킨다. 따라서 다음 예제처럼 한쪽을 조작하면 다른 쪽에도 반영된다.
 <pre>
 var obj1 = new Object();
