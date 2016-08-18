@@ -152,4 +152,27 @@ changeColor();
 </pre>
 이 코드에서는 실행컨텍스트가 세 개 있다. 전역 컨텍스트, changeColor()의 로컬 컨텍스트, swapColors()의 로컬 컨텍스트 세 개 이다. 전역컨텍스트에는 color변수와 changeColor() 함수가 포함된다 changeColor()의 로컬 컨텍스트에는 anotherColor()변수와 swapColors()함수만 있지만 전역 컨텍스트의 color변수에도 접근 할 수 있다. swapColors()의 로컬 컨텍스트에 있는  tempColor()변수는 오직 이 컨텍스트에서만 접근 할 수 있다. 전역컨텍스트나 swapColors()로컬 컨텍스트에서는 tempColor에 접근할 수 있다. 하지만 swapColors()에서는 부모인 다른 두 컨텍세트의 변수에 자유로이 접근 할 수 있다.  
 ![Minion](https://github.com/jinyounghwa/i-dont-nothing-javascript/blob/master/image/sc.png)  
-이 그림에서 각 사각형은 실행 컨텍스트를 나타낸다.
+이 그림에서 각 사각형은 실행 컨텍스트를 나타낸다.내부 컨텍스트는 스코프 체인을 통해 외부 컨텍스트 전체에 접근 할 수 있지만 외부 컨텍스트는 내부 컨텍스트에 대해 전혀 알 수 없다. 컨텍스트 사이의 연결은 선형이며 순서가 중요하다. 각 컨텍스트는 체인을 따라 상위 컨텍스트에서 변수나 함수를 검색할 수는 있지만, 스코프 체인을 따라 내려가며 검색할 수는 없다. swapColors()이 로컬 컨텍스트 스코프 체인에는 객체가 세 개 있다.하나는 swapColors()의 변수 객체이고 다른하나나는 changeColor()의 변수 객체이며 마지막은 전역 변수 객체이다. swapColors()의 로컬 컨텍스트는 자신의 변수 객체에서 변수나 함수 이름을 검색한 다음 찾지 못하면 스코프 체인을 따라 한 단계 씩 올라간다 changeColor()의 로컬 컨텍스트 스코프 체인에는 객체가 두개 있다 하나는 변수 객체이며 다른 하나는 전역 변수 객체이다. 즉 changeColor()의 로컬 컨텍스트에서는 swapColors()의 컨텍세트에 접근 할 수 없다.(함수 매개 변수도 변수로 간주되며 실행 컨텍스트에 있는 다른 변수와 같은 변수 규칙을 따른다.)  
+
+스크포 체인 확장  
+실행 컨텍스트에는 전역 컨텍스트와 함수 컨텍스트 두 가지 타임만 있지만(eval()을 호출 할 때 생성되는 세번째 타입이 있긴하다) 스코프 체인을 확장 할 수 있는 방법도 있다. 특정 문장은 스코프체인 앞 부분에 임시로 변수 객체를 만들며 해당 변수 객체는 코드 실행이 끝나면 사라진다 이렇게 임시 객체가 생성되는 경우는 다음 두 가지이다.
++ try-catch 문의 catch블록
++ with문
+<pre>
+function buildUrl() {
+  var qs = "?debug = true";
+  with(location) {
+    var url = href + qs;
+  }
+  return url;
+}
+</pre>
+여기에선 with문이 location객체에 적용되므로 location객체가 스코프 체인에 추가된다. buildUrl()함수에서 정의하는 변수는 qs하나 뿐이다. 변수 href를 참조하는 문장은 사실 with문이 추가한 변수 객체에 들어 있는 location.href변수를 참조하는 겁니다. 변수 qs를 참조할 때는 buildUrl()함수에서 정의한 변수를 참조하는데 이 변수는 이 변수는 컨텍스트의 변수 객체에 들어 있다 with문 내부에서 선언한 변수 url은 함수에 컨텍스트로 편입되며 따라서 함수 값으로 반환 할 수 있다.  
+
+자바스크립트에는 블록레벨 스코프가 없다.
+<pre>
+for (var i = 0; i < 10; i++) {
+  doSomething(i);
+}
+alert(i) // 10
+</pre>
