@@ -215,3 +215,39 @@ alert(getColor()); // "true"
 ![Minion](https://github.com/jinyounghwa/i-dont-nothing-javascript/blob/master/image/sc2.png)  
 
 이런 검색 과정을 보면 지역 변수를 참조할 때는 다음 변수 객체를 검색하지 않도록 자동으로 검색을 멈춤을 알 수 있다. 달리말해 다음과 같이 식별자가 로컬 컨텍스트에 정의되어 있으면 부모 컨텍스트에 같은 이름의 식별자가 있다 해도 참조 할 수 없다.
+<pre>
+var color = "blue";
+function getColor() {
+  var color = "red";
+  return color;
+}
+alert(getColor()); // "red"
+</pre>
+수정한 코드에서는 color가 getColor()함수 안에서 지역 변수로 선언되었다. 함수를 호출하면 변수 color가 선언된다. 함수의 두 번째 줄 var color = "red"; 는 지역 변수color를 로컬 컨텍스트에 선언한다. 로컬 컨텍스트에서 검색을 시작하는데 color란 이름의 변수를 찾고 그 값은 "red"이다. 변수를 찾았으므로 검색을 마치고 지역 변수를 사용한다 즉 함수는 red를 반환한다 일단 color을 지역 변수로 선언한 이후에는 해당 컨텍스트에서 전역 컨텍스트의 color변수를 이용 할 수 없다. 전역 컨텍스트이ㅡ color변수를 이용하려면 window.color이라고 명시해야 한다.  
+
+참조 카운팅  
+널리 쓰이지는 않지만 참조카운팅이라는 가비지 멀렉션 방법도 있다.
+<pre>
+var element = document.getElementById("some_element");
+var myObject = new Object();
+myObject.element = element;
+element.someObject = myObject;
+//순환참조를 피하려면 네이티브 자바스크립트 객체나 DOM요소를 다 사용한후에는 둘 사이 연결을 끊어준다.
+myObject.element = null;
+element.someObject = null;
+</pre>
+
+메모리 관리  
+가능한 한 최소한의 메모리만 사용해야 페이지 성능을 올릴 수 있다. 필요 없어진 데이터는 null을 할당하여 참조를제거 하는 편이 좋다. 수동으로 참조를 제거하는 대상은 주로 전역 변수 및 전역 객체의 프로퍼티이다. 지역 변수는 컨텍스트를 빠져나가는 순간 자동으로 참조가 제거된다.  
+<pre>
+function createPerson(name) {
+  var localPerson = new Object();
+  localPerson.name = name;
+  return localPerson;
+}
+var globalPerson = createPerson("Nicholas");
+// globalPerson 을 사용하는 코드
+globalPerson = null;
+</pre>
+이코드에서 변수 globalPerson의 값은 createPerson()함수가 반환하는 값이다. createPerson()함수는 localPerson객체를 만들고 name프로퍼티를 추가한다. createPerson()함수는 변수 localPerson을 반환하며 이 값은 globalPerson에 할당된다. createPerson()함수가 실행을 마치는 순간 localPerson은 컨텍스트를 벗어남으로 명시적으로 참조를 제거할 필요는 없다 반면 globalPerson은 전역 변수이기때문에 필요없어진 순간에 마지막 줄과 같이 직접 참조를 제거해야 한다.  
+변수에서 참조를 제거한다 해서 할당한 메모리가 자동으로 반환되는건 아니다. 참조 제거의 요저믕ㄴ 값의 컨텍스트를 없애서 다음에 가비지 콜렉션을 실행 할 때 해당 메모리를 회수하도록 하는 것이다. 
