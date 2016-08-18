@@ -74,4 +74,82 @@ var person = new person();
 setName(person);
 alert(person.name); // "Nicholas"
 </pre>
-이 코드에서는 객체를 만들어 변수 person에 저장했다 이 객체를 setName() 함수에 넘기면 함수는 해당 객체를 obj에 복사한다. 함수 내부에서는
+이 코드에서는 객체를 만들어 변수 person에 저장했다. 이 객체를 setName() 함수에 넘기면 함수는 해당 객체를 obj에 복사한다. 함수 내부에서는 obj와 person이 모두 같은 객체를 가리킨다. 결과적으로 obj는 함수에 값 형태로 전달 되었지만, 참조를 통해 객체에 접근한다. 함수 내부에서 obj객체에 name프로퍼티를 추가하면 함수 외부의 객체에도 반영되는데 obj가 가리키는것은 전역객체이기 때문이다. 명확하게 전달하기 위해 다음과 같이 수정해보자
+<pre>
+function setName(obj) {
+  obj.name = "Nicholas";
+  obj = new Object;
+  obj.name = "Greg";
+}
+var person = new Object();
+setName(person);
+alert(person.name); // "Nicholas"
+</pre>
+이 예제가 이전과 다른 점은 setName()에 코드를 두 줄 추가해서 obj를 새로온 객체로 재정의 했다는 것이다. person을 setName()에 전달하면 name프로퍼티에 "Nicholas"가 전달된다. 그런다음 변수 obj는 새 객체를 가르키며 새 객체의 name프로퍼티는 "Greg"가 저장된다. person이 참조로 전달되었다면, person이 가리키는 객체는 자동으로 name프로퍼티가 "Greg" 인 새 객체로 바뀌었을 것이다. 그러나 person에 다시 접근하면 그 값은 "Nicholas"이다. 함수에 값을 전달하였기 때문에 매개변수의 값이 바뀌었음에도 불구하고 원래 객체에 대한 참조를 그대로 유지한 것이다. 함수 내부에서 obj를 덮어쓰는 obj는 지역 객체를 가리키는 포인터가 된다 이 지역 객체는 함수가 실행을 마치는 즉시 파괴된다. "ECMAscript에서 함수 매개변수는 지역 변수와 다를것이 없다고 생각하라(중요)"  
+
+타입 판별  
+이전 장에서 소개한 typeof 연산자는 변수가 원시 타입인지 파악하기 최상이다. 좀더 정확하게 말하면 typeof연산자는 특정 변수가 문자열이나 숫자, 불리언, undefined라면 정확한 타입을 알 수 있다. 값이 객체이거나 null 이면 typeof는 다음과 같이 "Object"를 반환한다.  
+<pre>
+var s = "Nicholas";
+var b = true;
+var i = 22;
+var u;
+var n = null;
+var o = new Object;
+
+alert(typeof s); // string
+alert(typeof b); // number
+alert(typeof i); // boolean
+alert(typeof u); // undefined
+alert(typeof n); // object
+alert(typeof o); // object
+</pre>
+typeof는 원시 값에 대해서는 잘 동작하지만 참조 값에 대해서는 별 쓸모가 없다. 일반적으로 값이 객체인지 아닌지는 별 관심이 없으며 정말 필요한 건 어떤 타입의 객체인지 이다 ECMAscript의 instanceof연산자는 이런상황에 도움이 되며 다음 문법에 따라 사용한다.
+<pre>
+'result' = 'variable' instanceof 'constructor'
+</pre>
+ instanceof연산자는 변수가 주어진 참조 타입의 인스턴스 일 때 (프로토타입 체인으로 판단하는데 8장에서 자세하게 설명) true를 반환한다.
+ <pre>
+alert(person instanceof Object); // person변수가 Object의 인스턴스인가?
+alert(colors instanceof Array); // colors변수가 Array의 인스턴스인가?
+alert(pattern instanceof RegExp); // pattern변수가 RegExp의 인스턴스인가?
+ </pre>
+ 모든 참조 값은 Object의 인스턴스인 것으로 정의되어 있으므로 참조 값이나 Object생성자에 instanceof연산자를 사용하면 항상 true를 반환한다. 반면 원시값은 object인스턴스가 아니므로 원시값에 instanceof연산자를 사용하면 항상 false를 반환한다.  
+
+ 실행 컨텍스트와 스코프   
+ 실행컨텍스트는 일명 컨텍스트라고 불리며 자바스크립트에서는 중요한 개념이다. 변수나 함수의 실행 컨텍스트는 다른 데이터에 접근 할 수 있는지, 어떻게 행동하는지를 규정한다. 각 실행 컨텍스트에는 다른 데이터에 접근 할 수 있는지, 어떻게 행동하는지를 규정한다. 각 실행 컨텍스트에는 변수 객체가 연결되어 있으며 해당 컨텍스트에서 정의된 모든 변수와 함수는 이 객체에 존재한다. 이 객체를 코드에서 접근 할 수는 없지만 이면에서 데이터를 다룰 때 이 객체를 이용한다.  
+ 가장 바깥쪽에 존재하는 실행 컨텍스트는 전역 컨텍스트 이다. ECMAscript를 구현한 환경에 따라 이 컨텍스트를 부르는 이름이 다르다. 함수를 호출하면 족자적인 실행 컨텍스트가 생성된다.코드 실행이 함수로 들어갈 때마다 함수의 컨텍스트가 컨텍스트 스택에 쌓입니다. 함수 실행이 끝나면 해당 컨텍스트를 스택에서 꺼내고 컨트롤을 이전 컨텍스트에 반환한다.  
+ 컨텍스트에서 코드를 실행하면 변수 객체에 스코프체인이 만들어 진다. 스코프체인의 목적은 실행 컨텍스트가 접근 할 수 있는 모든 변수와 함수에 순서를 정의하는 것이다. 스코프체인의 앞쪽은 항상 코드가 실행되는 컨텍스트의 변수 객체이다. 컨텍스트가 함수라면 활성화 객체를 변수 객체로 사용한다. 활성화 객체는 항상 arguments변수 단 하나로 시작하며 이 변수는 전역 컨텍스트에는 존재하지 않는다. 변수 객체의 다으 ㅁ순서는 해당 컨텍스트를 포함하는 컨텍스트(부모 컨텍스트)이며 그 다음에는 다시 부모의 부모 컨텍스트이다. 이런식으로 전역에 도달할 때까지 계속한다. 식별자를 찾을 때는 스코프 체인 순서를 따라가면서 해당 식별자 이름을 검색한다. 식별자를 찾을 수 없다면 에러가 발생한다.
+
+ <pre>
+var color = "blue";
+function changeColor() {
+  if (color === "blue") {
+    color = "red";
+  }else {
+    color = "blue";
+  }
+}
+changeColor();
+ </pre>
+이 예제에서 함수 changeColor()의 스코프 체인에는 객체가 두개 들어 있다 하나는 함수 자체의 변수 객체(arguments는 여기에 정의된다.)이며 다른하나는 전역 컨텍스트의 변수 객체이다 변수 color는 함수의 스코프 체인에서 찾을 수 있으므로 접근 가능하다.  
+또한 로컬 컨텍스트에는 지역변수와 전역변수 모두를 사용 할 수 있다.
+<pre>
+var color = "blue";
+function changeColor() {
+  var anotherColor = "red";
+  function swapColors () {
+    var tempColor = anotherColor;
+    anotherColor = color;
+    color = tempColor;
+    // color, anotherColor, tempColor모두 접근 가능
+  }
+  // color, anotherColor, tempColor모두 접근 불가
+  swapColors();
+}
+//color 만 접근가능
+changeColor();
+</pre>
+이 코드에서는 실행컨텍스트가 세 개 있다. 전역 컨텍스트, changeColor()의 로컬 컨텍스트, swapColors()의 로컬 컨텍스트 세 개 이다. 전역컨텍스트에는 color변수와 changeColor() 함수가 포함된다 changeColor()의 로컬 컨텍스트에는 anotherColor()변수와 swapColors()함수만 있지만 전역 컨텍스트의 color변수에도 접근 할 수 있다. swapColors()의 로컬 컨텍스트에 있는  tempColor()변수는 오직 이 컨텍스트에서만 접근 할 수 있다. 전역컨텍스트나 swapColors()로컬 컨텍스트에서는 tempColor에 접근할 수 있다. 하지만 swapColors()에서는 부모인 다른 두 컨텍세트의 변수에 자유로이 접근 할 수 있다.  
+![Minion](https://github.com/jinyounghwa/i-dont-nothing-javascript/blob/master/image/sc.png)  
+이 그림에서 각 사각형은 실행 컨텍스트를 나타낸다.
