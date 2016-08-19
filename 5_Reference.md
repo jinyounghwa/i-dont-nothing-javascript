@@ -162,4 +162,36 @@ alert(people.toString()); // Nicholas, Greg
 alert(people.toLocaleString()); // Nicholas, Grigorious
 </pre>
 위 예제에서는 person1과 person2 두 객체를 정의 했다. 각 객체에서 toString()매서드와 toLocaleString()매서드가 서로 다른 값을 반환하도록 정의했다 다음에는 people배열을 만들어서 두 객체를 담았다. people배열을 alert()에 넘기면 배열의 각 값에서 toString()매서드를 호출하므로  "Nicholas,Greg" 가 표시된다. 이는 다음줄에서 toString()을 명시적으로 호출 것과 같은 결과이다. join()매서드를 사용하면 다른구분자를 써서 배열을 문자열로 나타낼 수 있다.  
-<pre></pre>
+<pre>
+var colors = ["red", "blue", "green"];
+alert(colors.join(",")); // red,blue,green
+alert(colors.join(||)); // red||blue||green
+</pre>
+
+스택 매서드  
+배열이 다른 데이터 구조인 거처럼 동작하게 하는 매서드가 있다는 점이다. 데이터를 삭제할 때는 마지막에 추가된 데이터가 제일먼제 삭제된다. pop()와 push()매서드를 사용하여 마치 스택처름 동작 할 수 있다. push()매서드는 매개 변수 숫자에는 제한이 없으며 받은 매개변수를 그대로 배열에 추가한 후 이에 맞게 늘어난 배열 길이를 반환한다. pop()매서드는 이와 반대로 배열의 마지막 데이터를 제거하고 length프로퍼티를 그에 맞게 줄여서 반환한다.
+<pre>
+var colors = new Array(); // 배열생성
+var count = colors.push("red","green"); // 데이터 2개 추가
+alert(count); //2
+
+count = colors.push("black"); // 다른데이터 추가
+alert(count); //3
+
+var item = color.pop(); //마지막 데이터 꺼냄
+alert(item); //"black"
+alert(colors.length); //2
+</pre>
+스택 매서드는 다음과 같이 다른 매서드와 함께 사용할 수 있다.   
+<pre>
+var colors = ["red", "blue"];
+colors.push("brown"); //데이터 추가
+colors[3] = "black"; //다른 데이터 추가
+alert(colors.length);
+
+var item = colors.pop(); // 마지막 데이터 꺼냄
+alet(item); // "black"
+</pre>
+
+큐 매서드  
+shift()와 push()매서드를 사용하면 배열이 큐처럼 동작하게 할 수 있다.  
