@@ -69,10 +69,14 @@ displayInfo() 함수는 arg란 이름의 매개변수 하나만 받는다. 매�
 <pre>
 alert(person["name"]); //Nicholas
 alert(person.name); //Nicholas
+
 // 두 표기법에는 아무런 차이가 없다. 대괄호 표기법은 다음과 같이 변수를 써서 프로퍼티에 접근 할 수 있다.
+
 var propertyName = "name";
 alert(person[propertyName]) // "Nicholas"
+
 // 대괄호 표기법에는 문법에러를 일으키는 문자가 들어가거나 키워드 및 예약어에 해당하는 프로퍼티 이름에도 접근할 수 있다.
+
 person["first name"] = "Nicholas";
 </pre>
 
@@ -94,7 +98,68 @@ var colors = new Array("red", "blue", "green");
 var colors = new Array(3); // 데이터가 세 개 있는 배열을 만든다.
 var names = new Array("Greg") // 문자열 "Greg"만 있는 배열을 만단다.
 </pre>
-Array생성자를 쓸 때는 new연산자를 생략해도 된다. 결과는 같다.  
-<pre>
+Array생성자를 쓸 때는 new연산자를 생략해도 된다. 결과는 같다. 두번째 방법은 '배열 리터럴' 표기법이다. 배열리터럴은 다음과 같이 대괄호 안에 데이터를 쉼표로 구분해 쓰는 방법이다.  
 
+<pre>
+var colors = ["red", "blue", "green"]; //문자열이 세 개 있는 배열을 만든다.
+var names = []; // 빈 배열을 만든다.
+var values = [1,2, ]; //데이터가 두개 또는 세개 들어있는 배열을 만든다. 이렇게는 하지말 것
+var options = [,,,,,,] //데이터가 5개 또는 6개 있는 배열을 만든다. 이렇게 하지말 것
 </pre>
+배열 값에 접근하려면 다음과 같이 대괄호 안에 있으므로 0으로 시작하는 인덱스를 넣으면 된다.  
+length프로퍼티는 배열을 추가할 때 사용할 수도 있다.
+<pre>
+var colors = ["red", "blue", "green"];
+colors[colors.length] = "black" // 인덱스 3에 데이터 추가
+colors[colors.length] = "brown" // 인덱스 4에 데이터 추가
+</pre>
+
+배열감지  
+배열 감지는 instanceof 연산자를 사용한다.
+<pre>
+if (value instanceof Array) {
+  //배열일 때 실행하는 코드
+}
+</pre>
+instanceof문제는 실행컨텍스트가 하나뿐이라고 가정하는것이고 배열을 한 프레임에서 다른 프로엠으로 전달했다면 전달한 배열은 전달받은 프레임에서 직접 생성한 배열과는 다른 생성자 함수를 가지기 깨문에 문제가 발생할 수 있다. ECMAscript 5 에서는 이 문제를 우회하기 위해 Array.isArray()매서드를 제공한다.  
+<pre>
+if (Array.isArray(value) ) {
+  //배열일 때 실행하는 코드 22장에서 추가 설명한다.
+}
+</pre>
+
+변환 매서드
+객체에는 모두 toLocaleString(), toString(), valueof() 매서드가 있다. 배열에서 호출했을 때는 toString()과 valueof()매서드는 같은 값을 반환한다. 두 매서드가 반환하는 값은 쉼표로 분리된 문자열인데, 각 문자열은 배열의 해당 슬롯과 동등한 문자열, 즉 각 슬롯에서 toString()매서드를 호출한 결과와 같다.  
+<pre>
+var colors = ["red", "blue", "green"];
+alert(colors.toString()); //red,blue,green
+alert(colors.valueof()); // red,blue,green
+alert(colors)//red,blue,green
+</pre>
+위 코드에서 toString()과 valueof()매서드는 명시적으로 배열의 각 슬롯을 쉼표로 구분한 문자열을 반환한다. 마지막 줄은 배열을 alert()에 직접 넘긴것이다. alert()는 매개변수를 문자열로 받으므로 toString()을 호출한것과 같은 결과이다.  
+toLocaleString()매서드는 toString()이나 valueof()와 같은 값을 반환할 때도 있고 그렇지 않을때도 있다. 배열에서 호출할 때 각값에서 toString()이 아니라 toLocaleString()을 호출해서 문자열 값을 얻는다는 점이 다르다.(당연한 말인것 같은데 뭔소린지..)  
+<pre>
+var person1 = {
+  toLocaleString : function () {
+    return "Nicholas";
+  },
+  toString : function () {
+    return "Nicholas";
+  }
+};
+var person2 = {
+  toLocaleString : function () {
+    return "Grigorious";
+  },
+  toString : function () {
+    return "Greg";
+  }
+};
+
+var people = [person1, person2];
+alert(people); // Nicholas, Greg
+alert(people.toString()); // Nicholas, Greg
+alert(people.toLocaleString()); // Nicholas, Grigorious
+</pre>
+위 예제에서는 person1과 person2 두 객체를 정의 했다. 각 객체에서 toString()매서드와 toLocaleString()매서드가 서로 다른 값을 반환하도록 정의했다 다음에는 people배열을 만들어서 두 객체를 담았다. people배열을 alert()에 넘기면 배열의 각 값에서 toString()매서드를 호출하므로  "Nicholas,Greg" 가 표시된다. 이는 다음줄에서 toString()을 명시적으로 호출 것과 같은 결과이다. join()매서드를 사용하면 다른구분자를 써서 배열을 문자열로 나타낼 수 있다.  
+<pre></pre>
