@@ -80,7 +80,7 @@ alert(person[propertyName]) // "Nicholas"
 person["first name"] = "Nicholas";
 </pre>
 
-Array타입
+Array타입  
 배열은 두가지 타입으로 만들어 진다. 첫번째는 다음과 같이 Array생성자를 쓰는 방법이다.
 <pre>
 var colors = new Array();
