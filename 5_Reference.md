@@ -266,4 +266,4 @@ values.sort(compare);
 alert(values); // 15,10,5,1,0
 </pre>
 
-조장 매서드 
+조작 매서드
