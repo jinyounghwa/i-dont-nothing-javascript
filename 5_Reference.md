@@ -195,3 +195,75 @@ alet(item); // "black"
 
 큐 매서드  
 shift()와 push()매서드를 사용하면 배열이 큐처럼 동작하게 할 수 있다.  
+<pre>
+var colors = new Array();
+var count = colors.push("red", "green");
+alert(count);
+
+count = colors.push("black");
+alert(count);
+
+var item = colors.shft(); //첫 번째 데이터 꺼냄
+alert(item); //"red"
+alert(colors.length) //2
+</pre>
+
+unshift()매서드도 있는데 이것은 shift()매서드와 반대로 동작한다. unshift()를 pop()매서드와 조합하면 큐의반대 즉 다음과 같이 배열 마지막에 데이터를 추가하고 앞에서 꺼내는 방식으로 사용 할 수 있다.   
+<pre>
+var colors = new Array();
+var count = colors.unshift("red", "green"); // 데이터 2개 추가
+
+count = colors.unshift("black"); // 다른 데이터 추가
+alet(count) // 3
+
+var item = colors.pop(); //첫번째 데이터 꺼냄
+alert(item); //"green"
+alert(colors.length); //2
+</pre>
+
+정렬 메서드  
+정렬메서드는 sort()와 reverse()매서드를 사용한다. reverse()함수는 단순이 데이터 순서를 뒤집는 역할을 하고, sort()는 기본적으로 작은값이 첫 번째에 오고 가장 큰 값이 마지막에 오도록 정렬한다. 이면에서 데이터를 문자열로 변환한 후 이를 순서로 판단한다.이는 좋지 않은 방법인데 숫자로된 배열을 호출할 경우 다음과 같은 결과를 내기 때문이다.   
+<pre>
+var value = [1,2,3,4,5];
+value.reverse();
+alert(value); // 5,4,3,2,1
+
+var values = [0,1,5,10,15];
+values.sort();
+alert(values); // 0,1,10,15,5
+</pre>
+이를 해결하기 위한 비교 함수를 작성해 보자  
+<pre>
+function compare(value1, value2) {
+  if (value1 < value2) {
+    return -1;
+  }else if (value1 > value2) {
+    return 1;
+  }else {
+    return 0;
+  }
+}
+</pre>
+이 비교함수는 대부분의 데이터 타입에서 동작하며 다음과 같이 sort() 매서드의 매개 변수로 사용 할 수 있다.  
+<pre>
+var values = [0,1,5,10,15];
+values.sort(compare);
+alert(values); // 0,1,4,10,15
+</pre>
+비교 함수를 sort()매서드에 매개함수로 넘기면 올바른 순서가 유지된다. 비교함수에 반환 값을 다음과 같이 바꾸면 역순으로 정렬 할 수 있다.  
+<pre>
+function compare(value1, value2) {
+  if (value1 < value2) {
+    return 1;
+  }else if (value1 > value2) {
+    return -1;
+  }else {
+    return 0;
+  }
+}
+var values = [0,1,5,10,15];
+values.sort(compare);
+alert(values); // 15,10,5,1,0
+</pre>
+
+조장 매서드 
