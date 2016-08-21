@@ -265,5 +265,28 @@ var values = [0,1,5,10,15];
 values.sort(compare);
 alert(values); // 15,10,5,1,0
 </pre>
++ reverse() 와 sort() 는 모두 자신을 호출한 배열에 대한 참조를 반환한다.(array.sort(copare).reverse()처럼 사용할 수 있다.)
 
 조작 매서드
+배열에 들어 있는 데이터를 조작하는 매서드도 다양하다. 예를 들어 concat() 매서드는 현재 배열 데이터를 기반으로 새로운 배열을 만듭니다. 이 매서드는 먼저 현재 배열을 복사한 다음 매서드의 매개변수를 새 배열 마지막에 추가하여 반환한다. 매개변수를 넘기지 않으면 단순히 현재 배열의 복사본을 반환한다. concat() 매서드에 매개변수로 배열을 넘기면 새 배열의 데이터를 모두 추가해서 반환한다. 매개변수가 배열이 아니면 단순히 해당 데이터를 새 배열 마지막에 추가한다. 다음 예제를 보자.  
+<pre>
+var colors = ["red","green","blue"];
+var colors2 = colors.concat("yellow",["black","brown"]);
+
+alert(colors); //red,green,blue
+alert(colors2);//red,green,blue,yellow,black,brown
+</pre>
+이 예제에서 color배열은 값 세 개 로시작한다. color배열에서 concat()매서드를 호출하며 문자열 "yellow"와 "black","brown"이 들어있는 배열을 매개 변수로 념겼다.colors2에 저장된 결과는 "red","green","blue","yellow","black","brown" 이다. 원래배열 colors 는 그대로 남아 있다.  
+
+slice()매서드는 배열에 포함된 데이터 일부를 새 배열로 만든다. slice()매서드는 매개변수를 두개 받는데, 각 매개변수는 원래 데이터에서 가져올 데이터 범위의 시작과 끝을 나타낸다.  
+<pre>
+var colors = ["red", "green","blue","yellow","purple"];
+var colors2 = colors.slice(1);
+var colors3 = colors.slice(1,4);
+
+alert(color2); // green,blue,yellow,purple
+alert(color3); // green,blue,yellow
+</pre>
+slice()를 호출하여 매개 변수를 넘기면 앞에 있는 1개의 배열을 제외한 나머지를 가져온다. 마찬가지로 두번째 alert에서는 첫번째와 네번째를 제외한 나머지를 가져왔다. 매개변수를 음수로 넘기면 배열길이 해당값을 더한숫자를 대신 사용한다. 5개의 배열길이에서 slice(-2,-1)은 slice(5-2,5-1)으로 인식하며 결과적으로 slice(3,4)를 호출한 결과와 같다.  
+
+splice()매서드  
