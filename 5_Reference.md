@@ -265,7 +265,7 @@ var values = [0,1,5,10,15];
 values.sort(compare);
 alert(values); // 15,10,5,1,0
 </pre>
-+ reverse() 와 sort() 는 모두 자신을 호출한 배열에 대한 참조를 반환한다.(array.sort(copare).reverse()처럼 사용할 수 있다.)
++ reverse() 와 sort() 는 모두 자신을 호출한 배열에 대한 참조를 반환한다.(array.sort(compare).reverse()처럼 사용할 수 있다.)
 
 조작 매서드
 배열에 들어 있는 데이터를 조작하는 매서드도 다양하다. 예를 들어 concat() 매서드는 현재 배열 데이터를 기반으로 새로운 배열을 만듭니다. 이 매서드는 먼저 현재 배열을 복사한 다음 매서드의 매개변수를 새 배열 마지막에 추가하여 반환한다. 매개변수를 넘기지 않으면 단순히 현재 배열의 복사본을 반환한다. concat() 매서드에 매개변수로 배열을 넘기면 새 배열의 데이터를 모두 추가해서 반환한다. 매개변수가 배열이 아니면 단순히 해당 데이터를 새 배열 마지막에 추가한다. 다음 예제를 보자.  
@@ -289,4 +289,126 @@ alert(color3); // green,blue,yellow
 </pre>
 slice()를 호출하여 매개 변수를 넘기면 앞에 있는 1개의 배열을 제외한 나머지를 가져온다. 마찬가지로 두번째 alert에서는 첫번째와 네번째를 제외한 나머지를 가져왔다. 매개변수를 음수로 넘기면 배열길이 해당값을 더한숫자를 대신 사용한다. 5개의 배열길이에서 slice(-2,-1)은 slice(5-2,5-1)으로 인식하며 결과적으로 slice(3,4)를 호출한 결과와 같다.  
 
-splice()매서드  
+splice()매서드
++ 삭제 - splice매서드를 이용해 숫자 배열 데이터를 원하는 만큼 삭제 할 수 있다. 삭제할 데이터는 첫 번째 매개변수(인덱스)부터 두 번째 매개변수(개수)만큼이다. 예를 들어 splice(0,2)는 처음 두 개를 삭제한다.  
++ 삽입 - 매개변수를 세 개 이상 넘기면 데이터를 삽입 할 수 있다. 매개변수를 삽입할 위치에 삽입할 데이터 순서로 넘기면 된다. 예를 들어 splice(2,0,"red", "green")은 배열 매서드 2에 문자열 "red"와 "green"을 삽입한다.  
++ 대체 - 삽입과 삭제를 조합하면 운하는 데이터를 다른 데이터로 대체 할 수 있다. 삽입할 데이터와 숫자가 정확하게 일치하지 않아도 된다.  
+<pre>
+var colors = ["red", "green", "blue"];
+var removed = colors.splice(0,1) // 첫 번째 데이터 제거
+alert(colors); // green,blue
+alert(removed); // red 하나만 남은 배열
+
+removed = colors.splice(1,0,"yellow","orange"); // 인덱스 1에 데이터 2개추가
+
+alert(colors); // green,yellow,orange,blue
+alert(removed); // 빈 배열
+
+removed = colors.splice(1,1,"red","purple"); // 데이터 2개블 추가하고 1개를 제거
+
+alert(colors); // green.red,purple,orange,blue
+alert(removed); //yellow하나만 남은 배열
+</pre>
+
+위치 매서드  
+ECMAscript 5에서는 배열에 indexOf()와 lastIndexOf()두 위치 매서드가 추가되었다. 이들 매서드는 매개변수를 두 개 받는데 첫 번째 매개변수는 검색할 데이터이며 옵션인 두 번째 매개변수는검색을 시작할 인덱이다. 두 매서드는 모두 찾아낸 데이터의 인덱스를 반환하는데 데이터를 찾지 못할 때에는 -1을 반환한다. 데이터를 검색할 때에는 타입까지 일치하는 일치연산자(===)를 사용한다.  
+<pre>
+var numbers = [1,2,3,4,5,4,3,2,1];
+
+alert(numbers.indexOf(4)); //3
+alert(numbers.lastIndexOf(4)); //5
+
+alert(numbers.indexOf(4,4)); //5
+alert(number.lastIndexOf(4,4)); //3
+
+var person = {name : "NiCholas"};
+var people = [{name : "NiCholas"}];
+var morePeople = [person];
+
+alert(people.indexOf(person)); // -1
+alert(morePeople.indexOf(person)); //0
+</pre>
+
+반복 매서드  
+ECMAscript 5에는 배열에 다섯가지 반복매서드를 추가했다. 이들 매서드는 모두 매개변수를 두 개 받는데 하나는 각 데이터에서 실행할 함수이며 옵션인 다른하나는 함수를 실행할 스코프 객체이다. 스코브는 this값에 영향을 미친다. 콜백함수는 모두 데이터, 데이터의 인덱스, 배열 자체의세 가지 매개변수를 받는다. 콜백함수를 실행했을 때 매서드의 반환값에 어떤 영향을 미치는지는 매서드에 따라 다르다.  
++ every() - 배열의 모든 데이터에서 콜백함수를 호출하고 반환값이 전부 true이면 true를 반환한다.
++ filter() - 배열의 모든 데이터에서 콜백함수를 호출하고, 반환값이 true인 데이터를 새 배열에 저장하여 반환한다.
++ forEach() - 배열의 모든 데이터에서 콜백함수를 호출한다. 이 매서드는 반환값이 없다.
++ map() - 배열의 모든 데이터에서 콜백 함수를 호출하고 그 결과르 ㄹ새 배열에 저장하여 반환한다.
++ some() - 배열의 모든 데이터에서 콜백함수를 호출하고 반환 값 중 하나라도 true이면 true를 반환한다.  
+이들 매서드는 원래 배열에 들어있던 데이터를 바꾸지는 않는다. every()매서드와 some()매서드는 원래 배열의 데이터를 특정 조건에 따라 쿼리한다는 점이 비슷하다. every()매서드가 true를 반환하려면 콜백함수가 배열의 모든 데이터에서 true를 반환해야 한다. 그렇지 않다면 false를 반혼한다. some()매서드는 반대로 콜백함수가 어떤 데이터에서든 true를 반화면 true를 반환한다.  
+<pre>
+var numbers = [1,2,3,4,5,4,3,2,1];
+var everyResult = numbers.every(function(item, index, array){
+  return (item > 2);});
+alert(everyResult); // false
+
+var SomeResult = numbers.some(function(item, index, array){
+  return (item >2);
+  })
+alert(SomeResult);
+</pre>
+이 코드는 every()와 some()을 호출하면서 데이터가 2를 초과하면 true를 반환하는 콜백함수를 넘긴다. 데이터 중 2를 초과하는 것은 일부에 불과하므로 every()는 false를 반환한다. 반면 some()은 해당 true를 반환한다.  
+filter()매서드는 콜백 함수의 결과에 따라 해당 데이터를 반환 배열에 포함할지 결정한다. 예를들어 2보다 큰 숫자만 반환배열에 담으려면 다음과같은 코드를 쓰면 된다.  
+<pre>
+var numbers = [1,2,3,4,5,4,3,2,1];
+var filterResult = numbers.filter(function(item,index,array){
+  return (item > 2);
+  })
+alert(filterResult); [3,4,5,4,3]
+</pre>
+콜백 함수가 3보다 큰 데이터에서만 true를 반환하므로 filter()매서드는 3,4,5,4,3이 포함된 배열을 반환한다. 이 매서드는 배열에서 특정 조건에 맞는 데이터만 쿼리하려 할 때 매우 유용하다. map()매서드 역시 배열을 반환한다. 결과 배열의 각 데이터는 원래 배열에서 해당 위치에 있던 데이터를 콜백 함수에 넘긴 결과이다. 예를들어 다음과 같이 배열의 모든 데이터에 2를 곱한 결과를 배열에 담아 반환 할 구 있다.  
+<pre>
+var numbers = [1,2,3,4,5,4,3,2,1];
+var mapResult = numbers.map(function(item, index, array){
+  return item * 2;
+  })
+alert(mapResult);
+</pre>  
+이 매서드는 원래 배열과 1:1로 대응하는 배열을 만들 때 유용하다.  
+forEach()는 단순히 배열의 각 데이터에서 콜백함수를 실행한다. forEach()매서드에는 반환 값이 없으며 기본적으로 해당 배열엣 for문을 실행한 것과 마찬가지 이다.  
+<pre>
+var numbers = [1,2,3.4,5,4,3,2,1];
+numbers.forEach(function(item, index, array){
+  //코드
+  });
+</pre>
+이들 매서드는 다양한 동작을 일정 범주로 단순화해서 배열을 쉽게 조작하도록 돕는다.  
+
+감소 매서드  
+ECMAscript 5에서는 배열의 감소 매서드 reduce()와 reduceRight()도 도입되었다. 두 매서드는 모두 배열을 순회하며 콜백 함수를 실행하고 값을 하나 만들어 반환한다. reduce()매서드는 이 작업을 배열의 첫 번째 데이터에서 시작하여 마지막까지 진행하고, reduceRight()는 반다래 배열의 마지막 데이터에서 시작하여 첫 번째까지 진행한다.  
+두 매서드는 모두 매개변수를 두개 받는다. 첫 번째 매개변수는 각 데이터에서 실행할 콜백 함수고 옵션인 두 번째 매개변수는 감소 작업을 시작할 초기 값이다. reduce()와 reduceRight()의 콜백 함수가 넘겨받는 매개변수는 이전 값, 현재 값, 현재 값의 인덱스, 현재 배열 네 가지이다. 콜백 함수가 반환하는 값은 자동으로 다음 데이터에서 실행하는 콜백 함수의 첫 번째 매개변수가 된다. 콜백 함수를 호출하는 데이터는 인덱스 1 이므로 첫 번째 배열 데이터에서 첫 번째 매개변수는 인덱스 0 의 데이터이고 두 번째 매개변수는 인덱스 1의 데이터 이다. reduce()매서드는 배열의 숫자를 모두 더하는 것 같은 작업에 쓸 수 있다.  
+<pre>
+var vales = [1,2,3.4.5];
+var sum = values.reduce(function(prev, cur, index, array){
+  return prev + cur;
+  });
+alert(sum); //15
+</pre>
+콜백 함수를 실행 할 때 prev는 1이고 cur은 3 이다. 콜백 함수를 두 번째 실행할 때 prev는 3(1+2)이고 cur(인덱스2)는 3이다. 이런식으로 배열의 모든 데이터를 순회한 다음 최종결과를 반환한다. reduceRight()도 같은 방식으로 동작한다.  
+<pre>
+var values = [1,2,3,4,5];
+var sum = values.reduceRight(function(prev, cur, index, array){
+  return prev + cur;
+  });
+alert(sum); // 15
+</pre>
+
+Date타입
+ECMAscript 의 date타입은 자바 초기버전의 java.util.Date에 기반한다. 따라서 Date타입은 날짜와 시간을 저장할 때 1970년 1월 1일 자정부터 몇 밀리초가 지났는지 나타내는 숫자를 사용한다.  
+<pre>
+var now = new Date();
+</pre>
+Date생성자에 매개변수를 넘기지 않으면 생성된 객체에는 현재 날짜와 시간이 저장된다. 특정 날짜와 시간을 저장하려면 매서드 Date.parse()와 Date.UTC()가 있다. 브라우저가 날짜 형식을 지원하는 경우는 다음과 같다.  
++ 월/일/년
++ 월이름, 일, 년
++ 요일 월이름 일 년 시:분:초 타임존
++ ISO 8601 확장형식 2001-01-52T00:00:00 이 형식은 ECMAscript 5호환 브라우저에서만 동작한다.
+Data.parse()에 넘긴 문자열이 올바른 날짜 형식이 아닐 때는 NaN을 반환한다.  
+
+RegExp타입  
+ECMAscript는 RegExp타입을 통해 정규 표현식을 지원한다. 정규 표현식은 다음과 같이 펄과 비슷한 문법을 써서 쉽게 생성 할 수 있다.  
+<pre>
+var expression = /pattern/flags;
+</pre>
+패턴(pattern)부분에 정규 표현식을 나타내는 식을 쓰는 이 식에는 문자 클래스, 수량자, 그룹, 룩어헤드, 역참조 등이 포함된다. 각 정규 표현식은 플래그(flags)를 통해 해당 정규 표현식이 어떻게 동작 할 지 나타낸다 플래그에는 세가지가 있다. 
