@@ -453,3 +453,33 @@ pattern1과 같게
 var pattern2 = new RegExp("[dc]at", "i");
 </pre>
 생성자의 매개 변수는 둘 다 문자열이기때문에 RegExp생성자에 리터럴을 넘기면 안됀다. 필요하다면 역슬레시를 하나 더 추가하는 방식으로 해야 한다.  
+리터럴로 생성한 정규 표현식이 RegExp생성자로 생성한 정규 표현식과 정확히 같지는 않다. ECMAscript 3판에서 리터럴로 생성한 정규 표현식은 항상 같은 RegExp인스턴스를 공유하지만 RegExp생성자는 호출할 때마다 새로운 인스턴스를 생성한다.  
+<pre>
+var re = null, i;
+for (i = 0; i <10; i++) {
+  re = /cat/g;
+  re.test("catstrophe");
+}
+for (i = 0; i < 10; i ++){
+  re = RegExp("cat", "g");
+  re.test("catstrophe");
+}
+</pre>
+ECMAscript 5에서는 이렇게 혼란스러운 점을 제거하기 위해 리터럴로 정규 표현식을 생성할 때도 RegExp생성자를 호출하게끔 명확하게 정했다.  
+
+정규 표현식 인스턴스 프로퍼티  
+RegExp인스턴스에는 다음 프로퍼티가 있으며 각 프로퍼티는 패턴에 대한 정보를 포함한다.  
++ global - g 플래그가 설정되었는지 나타내는 불리언 값이다.  
++ ingnoreCase - i 플래그가 설정되었는지 나타내는 블리언 값이다.  
++ lastIndex - 패턴 매칭을 어느 위치에서 시작할 지 나타내는 정수 값이다. 이 값은 항상 0에서 시작한다.  
++ multiline - m플래그가 설정되었는지 나타내는 불리언 값이다.  
++ source - 정규 표현식을 생성한 문자열. 이 프로퍼티는 항상 리터럴 형식을 반환하되 정규 표현식을 열고 닫는 / 문자는 포함되지 않는다.  
+<pre>
+var pattern1 = new RegExp(")/\[bc]at","i")
+
+alert(pattern1.global); // false
+alert(pattern1.ingnoreCase); // true
+alert(pattern1.multiline); // false
+alert(pattern1.lastIndex); // 0
+alert(pattern1.source); //"\[dc\]at"
+</pre>
