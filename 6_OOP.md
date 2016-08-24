@@ -219,12 +219,12 @@ var person2 = new Person("Greg", 27, "Doctor");
 
 함수 Person의 이름 첫 글자가 대문자 'P'인 점도 눈여겨 봐야 한다. 생성자 함수는 항상 대문자로 시작하고 생성자 함수가 아닌 함수는 소문자로 시작하는 표기법이 널리 쓰인다.  
 Person의 새 인스턴스를 만들 때는 new연산자를 사용한다. 생성자를 이런식으로 호출하면 내부적으로는 다음과같은 과정이 이루어진다.  
-<ul>
+<ol>
   <li>객체를 생성한다.</li>
   <li>생성자의 this값에 새 객체를 할당한다.따라서 this가 새 객체를 가리킨다.</li>
   <li>생성자 내부 코드를 실행한다.(객체에 프로퍼티를 추가한다.)</li>
   <li>새 객체를 반환한다.</li>
-</ul>
+</ol>
 앞 예제의 마지막에서 person1 과 person2 는 Person의 각각 다른 인스턴스로 채워진다. 두 객체의 constructor프로퍼티는 다음과 같이 Person을 가리킨다.  
 <pre>
 alert(person1.constructor == Person); //true
