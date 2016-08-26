@@ -183,3 +183,73 @@ alert(keys); // "constructor", "name", "age", "job", "sayName"
 </pre>
 
 나을 불가능한 constructor프로퍼티가 결과 목록에 들어 있다. Object.keys()와 Object.getOwnPropertyNames()모두 for-in대신 쓸 수 있다. 다만 인터넷 익스플로러 9이상에서 이 매서드를 지원한다.  
+
+프로토타입 대체 문법  
+이전 예제에서는 Person.prototype을 매 프로퍼티와 매서드마다 기입해야 했다. 다음과 같이 모든 프로퍼티를 담은 객체 리터럴로 프로토타입을 덮어써서 반복을 줄이고 프로토타입의 기능을 더 가독성 있게 캡슐화 하는 패턴이 널리 쓰이게 되었다.  
+<pre>
+function Person() {
+}
+Person.prototype = {
+  name : "Nicholas",
+  age : 29,
+  job : "Software Engineer",
+  sayName : function () {
+    alert(this.name)
+  }
+};
+</pre>
+이 예제는 Person.prototype 프로퍼티에 객체 리터럴로 생성한 객체를 덮어 썼다. constructor프로퍼티가 Person을 가리키지 않는다는 점만 빼고 최종결과는 완전히 같다. 함수가 생성되면 prototype객체가 생성되고 constructor는 자동으로 할당된다. 요약하면 이 문법은 기본 prototype객체를 완전히 덮어 쓰는데, 결과적으로 생성자(Object)와 같다. instanceof연산자는 여전히 올바르게 동작하지만 다음 예제와 같이 constructor가 객체의 타입을 정확히 나타낼 수 없게 된다.  
+<pre>
+var friend = new Person();
+alert(friend instanceof Object); //true
+alert(friend instanceof Person); //true
+alert(friend.constructor == Person); //false
+alert(friend.constructor == Object); //true
+</pre>
+instanceof연산자는 Object와 Person에서 여전히 true를 반환하지만 constructor프로퍼티는 Person이 아니라 Object를 가리킨다. constructor의 값이 중요하다면 다음과 같이 적절한 값을 지정할 수 있다.  
+<pre>
+function Person () {  
+}
+Person.prototype = {
+  constructor : Person,
+  name : "Nicholas",
+  age : 29,
+  job : "Software Engineer",
+  sayName : function () {
+    alert(this.name);
+  }
+};
+</pre>
+이 코드는 constructor프로퍼티를 명시적으로 생성하고 그 값에 Person을 지정하여 프로퍼티에 적절한 값이 담기도록 하였다. 이런식으로 생성자를 재설정하면 프로퍼티의 [[Enumerable]]속성이 true로 지정된다는 점은 알아둬야 한다. 네이티브 constructor프로퍼티는 기본적으로 나열불가능한 프로퍼티이므로 ECMAscript 5판을 구현한 자바스크립트 엔진이라면 Object.defineProperty()를 쓰는 편이 좋다.  
+<pre>
+function Person () {  
+}
+Person.prototype = {
+  name : "Nicholas",
+  age : 29,
+  job : "Software Engineer",
+  sayName : function () {
+    alert(this.name);
+  }
+};
+
+//ECMAscript 5판만 가능 - 생성자를 복구한다.
+Object.defineProperty(Person.prototype, "constructor", {
+  enumerable : false,
+  value : Person
+  });
+</pre>
+
+프로토타입의 동적성질  
+프로토타입에서 값을 찾는 작업은 적시(런타임) 검색이므로 프로토타입이 바뀌면 그 내용이 즉시 인스턴스에도 반영된다. 심지어 프로포타입이 바뀌기 전에 빠져나온 인스턴스도 바뀐 내용을 잔영한다. 다음 예제를 보자.  
+<pre>
+var friend = new Person();
+
+Person.prototype.sayHi = function () {
+  alert("hi");
+}
+friend.sayHi(); //"hi" 동작함
+</pre>
+이 코드는 Person인스턴스를 생성하여 friend에 저장하였다. 다음 문장은 sayHi()라는 매서드를 Person.prototype에 추가한다 friend인스턴스는 sayHi()가 추가되기 전에 만들어졌는데도 이 매서드에 접근 할 수 없다. 이런일이 가능한 것은 인스턴스와 프로토타입 사이의 느슨한 연결 때문이다. friend.sayHi()를 호출하면 먼저 인스턴스에서 sayHi라는 프로퍼티를 검색하는데, 찾을 수 없으므로 검색 범위를 프로토타입으로 옮긴다. 인스턴스와 프로토타입은 포인터를 통해 연결되었을 뿐 인스턴스를 생성할 때 sayHi없는 프로토타입을 복사한 것이 아니므로 프로토타입에서 sayHi프로퍼티를 찾아 여기 저장된 함수를 반환한다.   
+[[Prototype]] 포인터는 생성자가 호출 될 때 할당되므로 프로토타입을 다른 객체로 바꾸면 생성자와 원래 프로토 타입 사이의 연결이 끊어진다. 다시말해 인스턴스는 프로포타입을 가리키는 포인터를 가질 뿐 생성자와 연결된것이 아니다.  
+<pre></pre>
