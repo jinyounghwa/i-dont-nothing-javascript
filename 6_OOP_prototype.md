@@ -252,4 +252,75 @@ friend.sayHi(); //"hi" 동작함
 </pre>
 이 코드는 Person인스턴스를 생성하여 friend에 저장하였다. 다음 문장은 sayHi()라는 매서드를 Person.prototype에 추가한다 friend인스턴스는 sayHi()가 추가되기 전에 만들어졌는데도 이 매서드에 접근 할 수 없다. 이런일이 가능한 것은 인스턴스와 프로토타입 사이의 느슨한 연결 때문이다. friend.sayHi()를 호출하면 먼저 인스턴스에서 sayHi라는 프로퍼티를 검색하는데, 찾을 수 없으므로 검색 범위를 프로토타입으로 옮긴다. 인스턴스와 프로토타입은 포인터를 통해 연결되었을 뿐 인스턴스를 생성할 때 sayHi없는 프로토타입을 복사한 것이 아니므로 프로토타입에서 sayHi프로퍼티를 찾아 여기 저장된 함수를 반환한다.   
 [[Prototype]] 포인터는 생성자가 호출 될 때 할당되므로 프로토타입을 다른 객체로 바꾸면 생성자와 원래 프로토 타입 사이의 연결이 끊어진다. 다시말해 인스턴스는 프로포타입을 가리키는 포인터를 가질 뿐 생성자와 연결된것이 아니다.  
-<pre></pre>
+<pre>
+function Person (){
+}
+var friend = new Person();
+Person.prototype = {
+  constructor : Person,
+  name : "Nicholas",
+  age : 29,
+  job : "Software Engineer",
+  sayName : function () {
+    alert(this.name);
+  }
+};
+friend.sayName(); // error
+</pre>
+이 예제에는 프로토타입 객체를 덮어 쓰기 전에 Person의 인스턴스를 생성했다. friend.sayName()을 호출하면 에러가 발생하는데 friend가 가리키는 프로토타입에는 그런 프로퍼티가 존재하지 않기 때문에 아래에 그림에 설명을 요약하였다.  
+![Minion](https://github.com/jinyounghwa/i-dont-nothing-javascript/blob/master/image/proto63.png)
+
+생성저의 프로토타입을 바꾸면 그 이후에 생성한 인스턴스는 새로운 프로토타입을 참조하지만 그 이전에 생성한 인스턴스는 바꾸기 전에 프로토타입을 참조한다.  
+
+네이티브 객체 프로토타입  
+프로토타입 패턴은 커스텀 타입을 정의할 때도 유용하지만 네이티브 참조 타입역시 프로토타입 패턴으로 구현하였으므로, 중요하고 잘 이해해야 한다. 네이티브 참조 타입(Object, Array, String) 의 매서드 역시 생성자의 프로토타입에 정의되어 있다. 예를들어 Sort()매서드는 Array.prototype에 존재하고 substring()매서드는 String.prototype에 정의되어 있지 않는다.  
+<pre>
+alert(typeof Array.prototype.sort); //"function"
+alert(typeof String.prototype.substring); //"function"
+</pre>
+
+생성자 패턴과 프로토타입 패턴의 조합  
+커스텀 타입을 정의할 때 가장널리 쓰이는 방법은 생성자 패턴과 프로토타입 패턴의 조합이다. 즉 생성자 패턴으로 인스턴스 프로퍼티를 정의하고 프로토타입 패턴으로 매서드와 공유 프로퍼티를 정의하는 방법이다. 이런 접근법을 통하면 모든 인스턴스는 자신만의 인스턴스 프로퍼티를 가질 수 있고 참조 방식을 통해 매서드는 공유하므로 메모리를 절약 할 수 있다. 또 이 패턴은 생성자에 매개변수를 전달 할 수도 있으므로 두 패턴의 장점만 취한 패턴이라고 할 수 있다. 새로운 패턴으로 이전예제를 다음과 같이 고칠 수 있다.  
+<pre>
+function Person (name, age, job) {
+  this.name = name;
+  this.age = age;
+  this.job = job;
+  this.friends = ["Shelby", "Court"];
+}
+Person.prototype = {
+  constructor : Person,
+  sayName : function () {
+    alert(this.name);
+  }
+};
+var person1 = new Person("Nicholas", 29, "Software Engineer");
+var Person2 = new Person("Greg", 27, "Doctor");
+
+person1.friend.push("Van");
+
+alert(person1.friends); //"Shelby,Court,Van"
+alert(person2.friends); //"Shelby,Court"
+alert(person1.friends === person2.friends); //false
+alert(person1.sayName === person2.sayName); //true
+</pre>
+이 패턴에서 인스턴스 프로퍼티는 순전히 생성자에서만 정의 했고 공유 프로퍼티 constructor와 매서드 sayName은 프로토타입에서 정의했다. person1.friends에 문자열을 추가하더라도 person2.friends는 영향을 받지 않은데 둘은 따로 존재하는 배열이기 때문이다. 생성자/프로토타입 패턴은 ECMAscript에서 커스텀 참조 타입을 정의할 때 가장 널리 사용되는 방법이다. 일반적으로 참조 타입을 정의할 때 기본적으로 이 패턴을 먼저 떠올리길 바란다.  
+동적 프로토타입 패턴  
+필요한 경우 프로토타입을 생성자 내부에서 초기화하여 생성자와 프로토타입을 모두 쓰는 장점취하고 혼란을 해결하는 접근법은 아래와 같다. 반드시 필요한 매서드가 있느냐에 따라 프로포타입을 초기화 할 지 여부를 결정하면 된다.  
+<pre>
+function Person(name, age, job) {
+  //프로퍼티
+  this.name = name;
+  this.age = age;
+  this.job = job;
+  //매서드
+  if (typeof this.sayName != "function") {
+    Person.prototype.sayName = function(){
+      alert(this.name)
+    };
+  }
+}
+var friend = new Person("Nicholas", 29,"Software Engineer");
+friend.sayName(); //"Nicholas"
+</pre>
+코드에서 생성자 내부에 강조한 부분은 sayName()매서드가 존재하지 않는다면 추가되는 역할입니다. 이 코드 블록은 생성자가 첫 번째로 호출된 다음에만 실행됩니다. 그 다음 프로토타입이 초기화되며 그 이상 어떤 변경도 필요 없다. 프로토타입을 수정하면 즉시 모든 인스턴스에 반영되므로 이 접근법은 완벽하게 동작한다. 프로토타입을 초기화 하기 전에 if 문을 통해 프로퍼티나 매서드가 이미 존재하는지 확인한다. 프로퍼티와 매서드마다 확인할 필요 없고 if문 한번이면된다. 이 패턴을 쓰면 instanceof를 통해 객체가 어느 타입에서 만들어졌는지도 학인 할 수 있다.  
