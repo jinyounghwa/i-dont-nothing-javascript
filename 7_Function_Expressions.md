@@ -154,4 +154,5 @@ function compare(value1, value2) {
 var result = compare(5,10);
 </pre>
 이 코드는 전역실행 컨텍스트에서 호출하는 compare()라는 함수를 만든다. compare()을 처음으로 호출하면 argument,value1,value2 를 포함한 활성화 객체가 만들어 진다. 전역실행 컨텍스트의 변수 객체는 this와 result,compare를 포함하는 compare()실행 컨텍스트의 스코프 체인의 다음에 위치한다 아래 그림이 이런 관계를 나타내었다.  
-![Minion](https://github.com/jinyounghwa/i-dont-nothing-javascript/blob/master/image/proto61.png)  
+![Minion](https://github.com/jinyounghwa/i-dont-nothing-javascript/blob/master/image/fe71.png)  
+이면에서는 실행 컨텍스트마다 변수를 나타내는 객체가 존재한다 전역 컨텍스트의 변수 객체는 항상 존재하지만, compare()같은 로컬 컨텍스트 변수 객체는 함수를 실행하는 동안에만 존재한다. compare()함수를 정의하면 스코프 체인이 생성되고  자바스크립트 인터프리터는 이를 전역 변수 객체와 함께 미리 읽어 함수 내부의 [[Scope]]프로퍼티에 저장한다. 함수를 호출하면 실행컨텍스트가 생상되며 함수의 [[Scope]]프로퍼티에 들어있는 객체를 복사하여 스코프  체인이 생성된다. 
