@@ -9,7 +9,7 @@
 
 함수 표현식은 자바스크립트에서 가장 강력하면서도 혼란스러운 부분 중 하나이다. 함수를 정의하는 방법은 함수 선언과 함수 표현식 두 가지이다. 첫번째 함수 선언은 다음과 같이 function키워드 다음에 함수 이름을 쓰는 형태이다.  
 <pre>
-function functionName(arg0,arg1,agr2) {
+function functionName(arg0,arg1,arg2) {
   //함수 본문
 }
 </pre>
@@ -118,8 +118,40 @@ var factorial = (function f(num){
   }else{
     return num * f(num-1);
   }
-  })
+  });
 </pre>
 이 코드에서는 이름 붙은 함수 표현식 f()를 생성해 변수 factorial에 할당하였다. f라는 이름은 함수를 다른변수에 할당하더라도 그대로 유지되므로 재귀 호출은 정확히 실행된다.  
 
 클로저  
+'익명함수' 와 '클로저'는 자주 혼용된다. '클로저'란 다른함수의 스코프에 있는 변수에 접근 가능한 함수이다. 클로저는 보통 이전 예제의 createComparisonFunction()를 다음과 같이 고쳐서 만들어 낸다.  
+<pre>
+function createComparisonFunction(propertyName) {
+  return function(object1, object2) {
+    var value1 = object1[propertyName];
+    var value2 = Object2[propertyName];
+    if (value1 < value2) {
+      return -1;
+    }else if(value1 > value2) {
+      return 1;
+    }else{
+    return 0;
+    }
+  };
+}
+</pre>
+이 예제의 var 부분은 내부 함수(익명함수) 이면서 외부함수의 변수 (propertyName)에 접근한다. 내부 함수가 반환되어 다른 컨텍스트에서 실행되는 동안에도 propertyName에 접근 할 수 있다. 이런일이 가능한 것은 내부 함수에 스코프 체인에 createComparisonFunction()의 스코프가 포함되기 때문이다. 클로저를 잘 이해하기 위해서는 스코프 체인이 어떻게 생성되고 사용되는지 알아야 한다. 함수 활성화 객체는 argument 및 이름붙은 매개변수로 초기화 된다. 외부 함수의 활성화 객체는 스코프체인의 두 번째 객체이다. 이 과정이 포함관계에 있는 함수에서 계속 발생하여 스코프 체인이 전역 실행 컨텍스트에서 종료될 때가지 이어진다.  
+함수를 실행하면 값을 읽거나 쓸 변수를 스코프체인에서 검색한다. 아래의 코드를 확인하자.  
+<pre>
+function compare(value1, value2) {
+  if (value1 < value2) {
+    return -1;
+  }else if(value1 > value2){
+    return 1;
+  }else{
+    return 0l
+  }
+}
+var result = compare(5,10);
+</pre>
+이 코드는 전역실행 컨텍스트에서 호출하는 compare()라는 함수를 만든다. compare()을 처음으로 호출하면 argument,value1,value2 를 포함한 활성화 객체가 만들어 진다. 전역실행 컨텍스트의 변수 객체는 this와 result,compare를 포함하는 compare()실행 컨텍스트의 스코프 체인의 다음에 위치한다 아래 그림이 이런 관계를 나타내었다.  
+![Minion](https://github.com/jinyounghwa/i-dont-nothing-javascript/blob/master/image/proto61.png)  
