@@ -357,3 +357,49 @@ alert(person.getName());//"Greg"
 이 코드의 생성자는 getName()과 setName()두 매서드를 정의한다. 생성자 밖에서 각 매서드에 접근 할 수 있고, 각 매서드는 고유 변수 name에 접근 가능하다. Person생성자 외부에서 name변수에 직접 접근할 방법은 없다. 두 매서드는 모두 생성자 안에서 정의된 클로저이므로 스코프체인을 name에 접근 가능하다. 생성자를 호출 할 때마다 매서드가 재생되므로 고유 변수 name는 person의 인스턴스마다 고유하다. 한가지 단점은 오직 생성자 패턴을 통해서만 이런 결과가 가능하다는 점이다. 생성자 패턴에서는 매서드가 인스턴스마다 생성된다는 결점이 있다. 정적고유변수를 사용해 특권 매서드를 만들면 이 문제는 사라진다.  
 
 정적 고유 변수  
+특권 매서드는 고유 변수나 함수를 정의할 때 쓰는 고유 스코프를 통해서 생성할 수 있다. 패턴은 다음과 같다.  
+<pre>
+(function(){
+  //고유 변수와 함수
+  var privateVariable = 10;
+
+  function privateFunction() {
+    return false;
+  }
+  //생성자
+  MyObject = function(){
+  };
+  //공용 매서드와 특권 매서드
+  MyObject.prototype.publicMethod = function(){
+    privateVariable++;
+    return privateVariable();
+  }
+  })();
+</pre>
+이 패턴에는 생성자와 매서드를 감싸는 고유 스코프를 만들었다. 먼저 고유 변수와 함수를 정의한 다음 생성자와 공용 매셔드를 정의하였다. 일반적인 프로토타입 패턴과 마찬가지로 공용매서드는 프로토 타입에 정의하였다. 이 패턴에서는 생성자를 정의할 때 함수선언 대신 함수 표현식을 사용하였다. 함수선을 쓰면 항상 지역 함수가 만들어 지는데 이 패텬에서는 바람직하지 않다. 같은 이유료 MyObject에 var키워드를 쓰지 않았다. 변수를 선언하지 않고 초기화만 하면 항상 전역 변수가 되므로 MyObject에서는 고유 스코프가 아니라 전역에 위치한다. 스트릭트 모드에서는 변수를 선언하지 않고 할당하기만 하면 에러가 난다.  
+이 패턴과 이전 패턴의 주요 차이는 고유변수와 함수를 인스턴스에서 공유한다는 점이다. 특권 매서드는 프로토타입에 정의되므로 모든 인스턴스에서 같은 함수를 호출한다. 클로저가 될 특권 매서드는 외브 스코프에 대한 참조를 간직한다. 다음 코드를 확인해 보자.  
+<pre>
+(function(){
+  var name = "";
+
+  Person = function(value) {
+    name = value;
+  };
+  Person.prototype.getName = function(){
+    return name;
+  };
+  Person.prototype.setName = function(value){
+    name = value;
+  }
+  })();
+
+  var person1 = new Person("Nicholas");
+  alert(person1.getName()); // "Nicholas"
+  person1.setName("Greg");
+  alert(person1.getName); //"Greg"
+
+  var person2 = new Person("Michael");
+  alert(person1.getName()); //"Michael"
+  alert(person2.getName()); //"Michael"
+</pre>
+이 코드의 Person생성자는 getName(), setName()매서드와 마찬가지로 고유 변수 name에 접근 할 수 있다. 이패텬을 쓰면 name변수는 정적이 되고 모든 인스턴스에서 공유된다. 즉 한 인스턴에서 setName()을 호출하면 다른 모든 인스턴스에서 영향을 받는다. setName()을 호출하거나 Person의 새 인스턴스를 만들면 name변수에 새 값이 반영된다. 따라서 모든 인스턴스가 같은 값을 반환한다. 이런 방식으로 정적 고유 변수를 생성하면 각 인스턴스가 독립 변수를 가질 수는 없지만 프로토타입을 통해 코드 재사용성은 좋아진다 인스턴스를 쓸 것인지 정적 고유 변수를 쓸 것인지는 상황에 따라 결정해야 한다.  
