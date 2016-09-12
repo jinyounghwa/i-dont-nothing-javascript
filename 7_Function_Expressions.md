@@ -187,3 +187,48 @@ function createFunctions(){
 }
 </pre>
 이 함수는 함수로 이루어진 배열을 반환한다. 눈으로 보기에는 각 함수가 자신의 인덱스에 해당하는 값을 반환할 것 같아 보인다. 즉 인덱스 0의 함수는 0을 반환하고 인덱스 1의 함수는 1을 반환하는 것처럼 보인다. 사실은 모든 함수가 10을 반환한다. 모든 함수가 스코프체인의 createFunctions()의 활성화객체를 포함하므로 이들은 모두 같은 변수 즉 i를 참조한다. createFunctions()이 실행을 마치면 i에 10이 저장된다. 모든 함수가 같은 변수 객체를 참조하고 그 변수 객체에서 i값은 10이므로 모든 함수에서 i는 10이다. 하지만 다음과 같이 익명함수를 만들어서 클로저가 적절히 의도한대로 동작하게 만들 수도 있다.  
+<pre>
+function createFunctions() {
+  var result = new Array();
+  for (var i = 0; i< 10; i++){
+    result [i] = function(num) {
+      return function(){
+        return num;
+      };
+    }(i);  
+  }
+  return result;
+}
+</pre>
+고처 쓴 createFunctions()에서는 각 함수가 다른 숫자를 반환한다 클로저를 직접 배열에 할당하는 대신 익명함수를 정의하고 즉시 호출하였다. 익명함수는 매개변수로 num하나만 받는데 이는 결과 함수가 반환할 숫자이다 변수 i를 익명함수에 매개변수로 넘겼다. 함수 매개변수는 값 형태로 전달되므로 i의 현재 값을 매개변수 num에 복사한다. 익명함수는 num을 간직한 클로저를 생성하며 반환한다. 이제result배열에 들어 있는 각 함수는 고유한 numㄹ값을 가지며 그 값을 반환한다.  
+
+this객체  
+클로저 내부의 this는 복잡하게 동작한다. this객체는 런타임에서 함수가 실행중인 컨텍스트에 묶인다. 즉 전역 함수에서 this는 스트릭트 모드가 아닐때는 window, 스트릭트 모드에서는 undefined이며 함수가 객체 메서드로 호출되었을 때 this는 해당 객체이다. 이 컨텍스트에서 익명 함수는 특정 객체에 묶에 있지 않으므로 스트릭트 모드가 아니라면 this객체는 window이며 스트릭트 모드에서는 undefined이다. 하지만 클로저를 작성하는 형식 때문에 이를 분명이 알기는 어렵다.  
+<pre>
+var name = "the window";
+var object = {
+  name : "My Object",
+  getName : function(){
+    return function(){
+      return this.name;
+    };
+  }
+};
+alert(object.getNameFunc()()); // "the window" (스트릭트 모드가 아닐 때)
+</pre>
+여기에서는 name이라는 전역변수와 객체를 함께 생성했는데 객체에도 name프로퍼티가 있다. 객체의 getNameFunc()매서드는 익명 함수를 반환하고 익명 함수는 this.name를 반환한다. getNameFunc()는 함수를 반환하므로 object.getNameFunc()()을 호출하면 getNameFunc()가 반환하는 함수를 즉시 호출하는 것이나 마찬가지이며 문자열을 얻는다. 반환 받은 문자열은 전역 name변수의 값인 "the window"이다. 익명 함수가 외부 스코프의 this객체를 포함하지 않았던 이유는 무었일까? 모든 함수는 호출되는 순간 자동으로 this와 argument두 특별한 변수를 가지게 된다. 내부 함수는 결코 외부 함수의 this와 argument에 직접적으로 접근 할 수가 없다. 다음과 같이 외부 함수의 this객체를 다른 변수에 저장해서 클로저가 이 변수에 접근하도록 하는 일은 가능하다.  
+<pre>
+var name = "the window";
+
+var object = {
+  name : "My Object",
+  getNameFunc : function() {
+    <b>var that = this;</b>
+    return function(){
+      <b>return that.name;</b>
+    };
+  }
+};
+alert(object.getNameFunc()()); // "My Object"
+</pre>
+강조한
