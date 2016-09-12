@@ -231,4 +231,37 @@ var object = {
 };
 alert(object.getNameFunc()()); // "My Object"
 </pre>
-강조한
+강조한 두 줄은 이 예제와 이전 예제의 차이를 나타낸다. 익명 함수를 정의하기 전에 외부 함수의 this객체를 that이란 변수에 할당하였다. 이제 클로저를 정의하면 that는 외부 함수에 고유한 변수이므로 클로저는 이 변수에 접근 가능하다. 함수가 반환된 뒤에도 that 은 여전이 object에 묶여 있으므로 object.getNameFunc()()을 호출하면 "My Object"를 반환한다.  
+this의 값이 예상과 다른 특별한 경우가 몇 가지 있다. 이전 예제를 조금 수정한 아래의 코드를 확인하자.  
+<pre>
+var name = "the window";
+var obj = {
+  name : "my object",
+
+  <b>getName : function(){
+    return this.name;
+    }</b>
+}
+</pre>
+getName()매서드는 단순히 this.name의 값을 반환한다. object.getName()을 호출하는 다양한 방법과 그 결과를 확인하자.  
+<pre>
+object.getName(); //"my object"
+(object.getName)();//"my object"
+(object.getName = object.getName)(); // "the window" 스트릭트 모드가 아닐 때
+</pre>
+첫 번째 줄은 일반적인 방법으로 object.getName()을 호출하는데 this.name과 object.name이 같으므로 "my object"를 반환하였다. 두 번째 줄은 object.getName을 호출하기 전에 괄호로 감쌌다. 함수를 참조한 것처럼 보이지만 object.getName와 (object.getName)은 같은것으로 정의되어 있으므로 this값은 그대로 유지된다. 세 번째 줄에서는 먼저 할당한 후 그 결과를 호출하였다. 할당 표현식의 값은 함수 자체이므로 this값이 유지되지 않아서 the window를 반환한다. 아마 두 번째나 세번째의 패턴을 거의 사용하지 않겠지만 조금만 바뀌어도 this값이 예상하지 못하게 바뀔 수 있음을 알아두자.  
+
+블록 스코프 흉내내기  
+자바스크립트에서는 블록레벨 스코프라는 개념이 ES6이전에는 없기 때문에 블록 문장에서 정의한 변수는 해당 문장이 아니라 외부 함수에 묵인다.  
+<pre>
+function outputNumbers(count){
+  for(var i = 0; i < count; i++){
+    alert(i);
+  }
+  alert(i); //count
+}
+</pre>
+이 함수는 for루프를 정의하고 변수 i를 0으로 초기화 한다. 자바나 C++같은 언어에서는 변수 i가 for루프 블록 내부에 존재하므로 루프가 실행을 마치면 변수는 곧 파괴된다. 하지만 자바스크립트에서는 변수 i가 outputNumbers()의 활성화 객체 일부은 것으로 정의되므로 그 시점부터는 함수 내에서 접근 할 수 있다. 심지어 다음과 같이 변수를 재선은 에도 값은 그대로 유지된다. (왠만하면 하지 말 것)  
+<pre>
+
+</pre>
