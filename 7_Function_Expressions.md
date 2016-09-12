@@ -312,3 +312,48 @@ function outputNumbers(count){
   }
   })();
 </pre>
+이 코드를 전역 스코프에 두면 실행 날짜가 1월 1일인지 판단하여 사용자에 메시지를 보내는 기능이 생성된다. 변수 now는 전역 스코프의 변수가 아니라 익명함수의 지역 변수이다.  
+
+고유 변수  
+엄밀히 말해 자바스크립트에는 고유 구성원이란 개념이 없으며 객체 프로퍼티는 모두 공융이다. 하지만 고유변수 개념은 있다. 함수안에서 정의한 변수는 함수 밖에서 접근할 수 없으므로 모두 고유 변수라고 간주한다. 여기에는 함수 매개변수,지역변수,내부함수등이 포함된다. 다음 코드를 보자  
+<pre>
+function add(num1, num2) {
+  var sum = num1 + num2;
+  return sum;
+}
+</pre>
+이 함수에는 num1, num2,sum 세 가지 고유 변수가 있다. 함수 내부에는 이들 변수에 접근 할 수 있지만 함수 밖에서는 불가능하다. 클로저를 이 함수 안에서 만들면 스코프 체인을 통해 이들 변수에 접근 할 수 있다. 이런 지식을 활용해서 고유 변수에 접근 가능한 공융 매서드를 만들 수 있다.  
+특권(privileged) 매서드는 고유 변수/함수에 접근 가능한 공용 매서드이다. 객체에 특권 매서드를 만드는 방법은 두가지이다. 첫번째 방법은 다음과 같이 생성자 안에서 만드는 방법이다.  
+<pre>
+function MyObject(){
+  //고유 변수와 함수
+  var privateVariable = 10;
+  function privateFunction() {
+    return false;
+  }
+  //특권 매서드
+  this.publicMethod = function() {
+    privateVariable++;
+    return privateFunction();
+  };
+}
+</pre>
+이 패턴은 생성자 안에서 모든 고유 변수와 함수를 정의한다. 다음에는 이미 정의한 고유 멤버에 접근 가능한 특권 매서드를 만들 수 있다. 이 패턴이 가능한 것은 생성자 안에서 정의한 특권 매서드가 클로저가 되어서 생성자의 스코프 안에서 정의된 모든 변수와 함수에 접근할 수 있기 때문이다. 이 예제의 변수 privateVariable과 함수 privateFunction()sms publicMethod()에서만 접근 가능하다.일단 MyObject의 인스턴스를 생성하면 privateVariable과 privateFunction()에 집적적으로 접근할 방법은 없으며 반드시 publicMethod()를 통해야 한다. 다음과같이 고유 및 특권 멤버를 정의해서 데이터를 직접적으로 수정 할 수 없게 보호 할 수 있다.  
+<pre>
+function Person(name) {
+  this.getName = function () {
+    return name;
+  };
+  this.setName = function(value) {
+    name = value;
+  };
+}
+
+var person = new Person("Nicholas");
+alert(person.getName()); //"Nicholas"
+person.setName("Greg");
+alert(person.getName());//"Greg"
+</pre>
+이 코드의 생성자는 getName()과 setName()두 매서드를 정의한다. 생성자 밖에서 각 매서드에 접근 할 수 있고, 각 매서드는 고유 변수 name에 접근 가능하다. Person생성자 외부에서 name변수에 직접 접근할 방법은 없다. 두 매서드는 모두 생성자 안에서 정의된 클로저이므로 스코프체인을 name에 접근 가능하다. 생성자를 호출 할 때마다 매서드가 재생되므로 고유 변수 name는 person의 인스턴스마다 고유하다. 한가지 단점은 오직 생성자 패턴을 통해서만 이런 결과가 가능하다는 점이다. 생성자 패턴에서는 매서드가 인스턴스마다 생성된다는 결점이 있다. 정적고유변수를 사용해 특권 매서드를 만들면 이 문제는 사라진다.  
+
+정적 고유 변수  
