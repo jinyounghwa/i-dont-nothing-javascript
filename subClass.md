@@ -63,3 +63,61 @@ extend(SingletonSet.prototype,{
 
 생성자 함수와 매서드 체이닝  
 매서드 체이닝이란 서브클래스를 정의 할 때 종종 매서드를 완전히 교체하지 않고 오직 슈퍼클래스의 매서드의 행위를 확장하거나 수정만 하고 싶을때 서브클래스의 생성자와 매서드가 슈퍼클래스의 생성자와 매서드를 호출하도록 하는것을 말한다.  
+아래의 예제는 add()매서드를 완전히 재구현 하고 싶지않고 슈퍼클래스의 add()매서드만 체이닝 한 예제이다.  
+<pre>
+// NonNullSet은 null과 undefined를 멤버로 허용하지 않는 Set의 서브 클래스이다.
+
+function NonNullSet() {
+  //NonNullSet을 위한 별도의 동작 없이, 단지 슈퍼클래스 생성자를 체이닝만 한다.
+  //이 생성자 호출에 의해 생성된 객체를 초기화 하기 위해
+  //슈퍼 클래스의 생성자를 일반 함수처럼 호출한다.
+  Set.apply(this, arguments);
+}
+//Set의 서브클래스인 NonNullSet을 만든다.
+NonNullSet.prototype = inherit(Set.prototype);
+NonNullSet.prototype.constructor = NonNullSet;
+
+//null과 undefined를 제외하려면, add()매서드만 재정의하면 된다.
+NonNullSet.prototype.add = function(){
+  //인자가 null또는 undefined 인지 여부를 검사한다.
+  for(var i = 0; i < arguments.length; l++)
+  if(arguments[i] == null){
+    throw new Error(" null또는 undefined는 불가"
+  }
+  //실제 멤버 삽입은 슈퍼 클래스의 매서드를 체이닝하여 수행
+  return Set.prototype.add.apply(this, arguments);
+}
+</pre>
+
+조합 대 서브클래스
+객체지향 설계에서 지금까지 설명한 특정 필터 함수를 사용하여 집합 원소의 자격을 제한하는 서브 클래스를 만드는 방법 대신 '상속보다는 조합'을 선호하는 것이다.  
+<pre>
+var FilterSet = Set.extend(
+  function FilterSet(Set, filter){//생성자
+    this.set = set;
+    this.filter = filter;
+  },
+  {//인스턴스 매서드
+    add : function () {
+      //필터가 설정되었다면 적용한다.
+      if(this.filter) {
+        for(var i =0;i < arguments.length; i++){
+          var v = arguments[i];
+          if(!this.filter(v))
+          throw new Error("FilterSet:value" + v + "filter의해 거부")
+        }
+      }
+      // add()매서드에 대한 요청을 this.set.add()로 전달한다.
+      this.set.add.apply(this.set, arguments);
+      return this;
+    },
+    // 나머지 매서드들은 this.add()로 요청을 전달하기만 하고 다른행동을 하지 않는다.
+    remove : function(){
+      this.set.remove.apply(this.set, arguments);
+      return this;
+    },
+    contains : function(v) {return this.set.contains(v);},
+    size: function(){return this.set.size();},
+    foreach: function(f, c){this.set.foreach(f,c)}
+  });
+</pre>
