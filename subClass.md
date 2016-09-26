@@ -40,7 +40,7 @@ function SubClass(obj){
 <pre>
 //생성자 함수
 function SingletonSet(number) {
-  this.menber = menber; // 이 세트의 단일 멤버를 저장한다.
+  this.member = member; // 이 세트의 단일 멤버를 저장한다.
 }
 //set의 프로토타입을 상속한 프로토타입 객체를 생성한다.
 SingletonSet.prototype = inherit(Set.prototype);
@@ -120,4 +120,139 @@ var FilterSet = Set.extend(
     size: function(){return this.set.size();},
     foreach: function(f, c){this.set.foreach(f, c)}
   });
+</pre>
+아래의 예제는 추상 집합 클래스의 계층구조를 정의한다. AbstractSet를 상속한 AbstractEnumerableSet에는 추상 매서드 size()와 foreach()가 추가되어 있고 그 매서드들을 이용하는 구체 메서드들(toString(), toArray(), equals())도 정의되어 있다. 아래의 예제는 한번 쳐볼 가치가 있을 것 같다.  
+<pre>
+//모든 추상 매서드에서 편의상 사용하는 매서드,
+function abstractmethod(){throw new Error("추상 매서드를 호출하였다.")};
+//AbstractSet클래스는 추상 매서드 contains()하나만을 정의한다.
+function AbstractSet(){throw new Error"추상 클래스는 인스턴스화 할 수 없습니다.};
+AbstractSet.prototype.contains = abstractmethod;
+//NotSet은 AbstractSet을 구현한 클래스이다.
+//이 집합에 속한 멤버는 다른 집합의 멤버가 될 수 없다.
+//NotSet은 다른 집합으로부터 정의되기 때문에 멤버를 추가할 수 없고,무한한 멤버를 가지고 있기 때문에 열거 될 수도 없다.
+//NotSet에 대해서 할 수 있는것은 오직 특정 값에 대한 멤버 자격여부 검사뿐이다.
+//이 서브클래스를 정의하려 앞서 정의한 Function.prototype.extend()매서드를 사용한다.
+var NotSet = AbstractSet.extend(
+  function NotSet(set){this.set = set;},
+  {
+    contains : function(x){return !this.set.contains(x)};
+    toString : function(x){return "~" + this.set.toString();},
+    equals : function(that){
+      return that instanceof NotSet && this.set.equals(that.set);
+    }
+  }
+  );
+  //AbstractEnumerableSet은 AbstractSet의 추상 서브클래스다.
+  //이 클래스는 추상 매서드 size(), foreach()를 정의하고
+  //구체 매서드인 isEmpty(), toArray(),to[Locale]String(), equals()를 정의한다.
+  //이 클래스의 서브클래스에서  contains(), size(), 그리고 foreach()를 구현할 때,
+  //이 다섯가지 구체 매서드를 사용 할 수 있다.
+  var AbstractEnumerableSet = AbstractSet.extend(
+    function(){throw new Error("추상 클래스는 인서튼스 할 수 없습니다.");},
+    {
+      size : abstractmethod,
+      foreach : abstractmethod,
+      isEmpty : function(){return this.size() == 0;},
+      toString : function() {
+        var s = "{", i =0;
+        this.foreach(function(v){
+          if (i++ > 0) s += ".";
+          s += v;
+          });
+          return s + "}";
+      },
+      toLocalString : function(){
+        var s = "{", i =0;
+        this.foreach(function(v){
+                    if(i++ > 0) s += ".";
+                    if(v == null) s += v; // null & undefined인 경우
+                    else s += v.toLocalString(); //이 외의 경우
+          });
+          return s + "}";
+        },
+        toArray : function(){
+          var a = [];
+          this.foreach(function(v){a.push(v);});
+          return a;
+        },
+        equals : function(that){
+          if(!(that instanceof AbstractEnumerableSet)) return false;
+          //만약 크기가 같지 않으면 두 집합은 다르다.
+          if(this.size() != that.size())return false;
+          //this의 모든 요소가 that에도 있는지 검사한다.
+          try{
+            this.foreach(function(v){if(!that.contains(v))throw false;});
+            return true; //모든 요소가 같음. 두 집합은 같음
+          }catch(x){
+            if(x === false) return false; //두 집합은 같지 않다.
+            throw x; //다른 예외가 발생하면 외부로 예외를 전달한다.
+          }
+        }
+      }
+    });
+    //SingletonSet은 AbstractEnumerableSet의 구체 서브 클래스이다.
+    //SingletonSet인스턴스는 하나의 멤버만 가진 읽기 전용 세트다.
+
+  var SingletonSet = AbstractEnumerableSet.extend(
+    function SingletonSet(member){this.member = member},
+    {
+      contains : function(x){return x === this.member},
+      size : function(){return 1;},
+      foreach : function(f, ctx){f.call(ctx,this.member);}
+    }
+    );
+    //AbstractWritableSet은 AbstractEnumerableSet의 추상 서브 클래스이다.
+    //이 클래스는 추상 매서드 add()와 remove()를 정의하고 이 추상 매서드들을 사용하는 구체 매서드 union(), intersection(), difference()를 구현한다.
+  var AbstractWritableSet = AbstractEnumerableSet.extend(
+    function(){throw new Error("추상 클래스는 인서튼스화할 수 없습니다.")},
+    {
+      add : abstractmethod,
+      remove : abstractmethod,
+      union : function(that){
+        var self = this;
+        that.foreach(function(v){self.add(v);});
+        return this;
+      },
+      intersection function(that){
+        var self = this;
+        this.foreach(function(v){if (!that.contains(v)) self.remove(v);});
+        return this;
+      },
+      difference : function(that){
+        var self = this;
+        that.foreach(function(v){self.remove(v);});
+        return this;
+      }
+    });
+    // ArraySet은 AbstractWritableSet의 구체 서브클래스다.
+    // 이 클래스는 집합의 원소를 배열로 나타내고, contains()매서드는 배열에 대해 선형 검색을 한다.
+    // contains()aotjemsms 0(1)이 아니라 0(n)이기 때문에, 상대적으로 작은 집합에서만 사용되어야 한다.
+    //ArraySet의 구현은 ECMAScript 5의 Arry매서드인 instanceof()와 foreach()에 의존하고 있다는 점을 유의하라
+    var ArraySet = AbstractWritableSet.extend(
+      function ArraySet() {
+        this.values = [];
+        this.add.apply(this, arguments);
+      },
+      {
+        contains : function(v){return this.values.indexOf(v) != -1;},
+        size : function(){return this.values.length;},
+        foreach : function(f, c){this.values.forEach(f, c);},
+        add : function(){
+          for (var i =0; i < arguments.length; i++){
+            var arg = arguments[i];
+            if(!this.contains(arg)) this.values.push(arg);
+          }
+          return this;
+        },
+        remove : function() {
+          for (var i =0; i< arguments.length; i++){
+            var p = this.values.indexOf(arguments[i]);
+            if (p == -1) continue;
+            this.values.splice(p,1);
+          }
+          return this;
+        }
+      }
+      )
 </pre>
