@@ -256,3 +256,45 @@ var NotSet = AbstractSet.extend(
       }
       )
 </pre>
+위 예제는 Backbone에서 새로운 모델을 정의하는것과 유사한 부분이 있는데 아래의 예제를 확인하면 더더욱 비슷하다 생각될 것이다.  
+<pre>
+var User = Backbone.Model.extend({
+  default : {
+    username : '',
+    firstName : '',
+    lastName : ''
+  },
+  idAttribute : 'username',
+  fallName : function() {
+    return this.get('firstName') + this.get('lastName');
+  }
+  });
+</pre>
+Backbone은 "컬렉션"클래스라고 불리는것을 제공한다 이것은 개발자가 쉽게 모델 인스턴스의 공통집합을 다루는데 도움이 된다. 개발자는 그것을 강력한 배열로 여길 수 있으며 도움이 되는 유틀리티 함수와 함께 로드된다.  
+<pre>
+var UserCollection = Backbone.Collection.extend({
+  model : User,
+  url : '/users'
+  });
+  var users = new UserCollection();
+  user.fetch(); //http 를 통해 사용자 레코드를 가지고 온다.
+  var johndoe = users.get('john_doe'); // find by primary idAttribute
+</pre>
+제이쿼리에서의 객체 확장 - extend()매서드  
+제이쿼리에서는 다른 객체의 프로퍼티나 매서드 복사 등으로 객체의 기능을 추가하는데 사용하는 extend()매서드를 제공한다.  
+<pre>
+Jquery.extend = Jquery.fn.extend = function(obj, prop){
+  if (!prop){prop == obj; obj = this}
+
+  // 함수를 호출 할 때 obj인자 하나만을 넘겨서 호출하는 경우 prop인자가 undefined값을 가지므로 !prop인자가 참이 되면서 if문 이하가 호출된다.
+  //if문 내부 코드를 살펴보면 obj인자로 전달된 객체를 prop매개 변수에 저장한다 그리고 obj매개변수에는 this를 저장한다 여기서 함수 호출 패턴에 따라
+  //함수 호출 extend()매서드 어디서 호출 호출되는지 따라서 다르게 바인딩된다.
+  //Jquery 함수 객체에서 extend()매서드가 호출 될 경우 this는 Jquery 함수 객체로 바인딩된다. 반면에 jquery.prototype객체에서 extend()가 호출될 경우
+  //jquery.prototype객체로 바인딩된다.
+
+  for (var i in prop) obj[i] = prop[i]
+  // for-in 문으로 prop인자의 모든 프로퍼티를 obj인자로 복사한다. 결국 obj객체에 prop객체와 프로퍼티가 추가된다.
+  return obj;
+}
+</pre>
+정리하면 extend() 매서드는 함수명 그대로 객체의 기능을 추가하는것이다.
