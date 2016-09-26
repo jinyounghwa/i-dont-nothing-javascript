@@ -90,7 +90,7 @@ NonNullSet.prototype.add = function(){
 </pre>
 
 조합 대 서브클래스
-객체지향 설계에서 지금까지 설명한 특정 필터 함수를 사용하여 집합 원소의 자격을 제한하는 서브 클래스를 만드는 방법 대신 '상속보다는 조합'을 선호하는 것이다.  
+객체지향 설계에서 지금까지 설명한 특정 필터 함수를 사용하여 집합 원소의 자격을 제한하는 서브 클래스를 만드는 방법 대신 '상속보다는 조합'을 선호하는 것이다. 조합을 사용하면 어떤 집합객체를 감싸는 새로운 집합 객체를 만들어 조건에 맞지 않는 객체에 해단 삽입 요청을 거른뒤에 안쪽 집합 객체에 전달함으로써 목적을 달성 할 수 있다.  
 <pre>
 var FilterSet = Set.extend(
   function FilterSet(Set, filter){//생성자
@@ -104,7 +104,7 @@ var FilterSet = Set.extend(
         for(var i =0;i < arguments.length; i++){
           var v = arguments[i];
           if(!this.filter(v))
-          throw new Error("FilterSet:value" + v + "filter의해 거부")
+          throw new Error("FilterSet : value" + v + "filter의해 거부")
         }
       }
       // add()매서드에 대한 요청을 this.set.add()로 전달한다.
@@ -118,6 +118,6 @@ var FilterSet = Set.extend(
     },
     contains : function(v) {return this.set.contains(v);},
     size: function(){return this.set.size();},
-    foreach: function(f, c){this.set.foreach(f,c)}
+    foreach: function(f, c){this.set.foreach(f, c)}
   });
 </pre>
