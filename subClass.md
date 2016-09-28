@@ -298,3 +298,27 @@ Jquery.extend = Jquery.fn.extend = function(obj, prop){
 }
 </pre>
 정리하면 extend() 매서드는 함수명 그대로 객체의 기능을 추가하는것이다.
+<pre>
+class Person {
+
+  construcor(firstname, lastname){
+    this.firstname = firstname;
+    this.lastname = lastname;
+  }
+  greet(){
+    return 'hi' + firstname;
+  }
+}
+var john = new Person
+
+// extend = Set the Prototype (__Proto__)
+class InformalPerson extend Person {
+  construcor(firstname, lastname){
+    super(firstname, lastname)
+  }
+  greet(){
+    return 'yo' + firstname; // override or hide with Object.create
+  }
+}
+
+</pre>
