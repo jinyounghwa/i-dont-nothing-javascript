@@ -45,7 +45,7 @@ for(i=0, lem=strong.length; i <len; i++){
   strong = strongs[i];
   strong.className = "important";
 }
-</pre>
+</pre></pre>
 querySelector()과 마찬가지로 querySelectorAll()역시 브라우저에서 지원하지 않는 선택자를 쓰거나 CSS선택자 문법이 틀리면 에러가 밸생한다.  
 
 matchesSelector()매서드  
