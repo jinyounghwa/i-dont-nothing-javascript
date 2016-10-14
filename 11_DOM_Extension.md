@@ -113,5 +113,21 @@ classList프로퍼티
 // "user" 클래스를 제거한다.
 // 먼저 클래스 이름 목록을 만든다.
 var className = div.className.split(/\s+/);
+
 // 제거할 클래스 이름을 찾는다.
+var pos = -1;
+i,
+len;
+for(i=0, len=className.length; i < len; i++){
+  if(className[i] == "user"){
+    pos = -1;
+    break;
+  }  
+}
+
+//클래스 이름을 제거한다.
+className.splice(i,1);
+
+//클래스 이름을 다시 지정한다.
+div.className = className.join(" ");
 ```
