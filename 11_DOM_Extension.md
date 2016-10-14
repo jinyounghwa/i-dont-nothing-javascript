@@ -88,3 +88,30 @@ var i,
   }
 </pre>
 요소 간 이동을 구현한 브라우저는 인터넷 익스폴로러 9이상 동작한다.  
+
+HTML5  
+클래스 관련 추가사항
+getElementByClassName()매서드
+HTML5에서 가장 인기있는 document객체와 HTML요소 전체에서 사용 가능한 getElementByClassName()매서드이다. 이 매서드는 기존의 DOM기능을 바탕으로 구현한 자바스크립트 라이브러리에서 발전한 것이며 네이티브로 구현함에 따라 성능이 크게 향상되었다. getElementByClassName()매서드는 클래스 이름 문자열을 매개변수로 받으며 해당 클래스를 모두 가진 요소의 NodeList를 반환한다.클래스 이름의 순서는 상관 없다. 다음 예제를 확인해 보자.  
+<pre>
+//순서에 상관 없이 클래스 이름에 "usename"과 "current"모두 있는 요소를 찾는다.
+var allCurrentUsernames = document.getElementByClassName("usename current");
+
+//myDiv의 자손중에 "selected" 클래스가 있는 요소를 모두 찾는다.
+var selected = document.getElementById("myDiv").getElementByClassName("selected");
+</pre>
+이 매서드는 호출한 요소의 자손만 쿼리하여 반환한다. document에서 getElementByClassName()을 호출하면 항상 해당 클래스를 가진 요소 전체를 반환한다. 이 매서드는 클래스를 바탕으로 이벤트를 등록하려 할 때 유용하다. 반환값은 NodeList이므로 getElementByTagName()이나 기타 NodeList객체를 반혼하는 DOM매서드와 같은 성능문제가 있음을 염두해 둘 것.  
+getElementByClassName()매서드를 구현한 브라우저는 익스 9 이상이다.  
+
+classList프로퍼티  
+클래스 이름을 조작할 때는 className프로퍼티를 이용해 클래스 이름을 추가하거나 제거,교체했다 className프로퍼티는 단순한 문자열일 뿐이므로 바꿀 때마다 문자열 전체를 염두해 두고 조작해야 했으며, 클래스 이름 중 일부는 바꿀 필요가 없을 때도 복잡한 작업이 필요했다. 예를들어 다음 HTML코드를 보자.  
+<pre>
+< div class="bd user disabled" > ... < /div >
+</pre>
+이 < div > 요소에는 세 가지 클래스가 할당되어 있다. 이들 클래스 중 하나를 제거하려면 class속성을 분할해서 필요 없는 클래스를 제거 한 다음 남은 클래스를 합쳐 클래스 문자열을 다시 생성해야 한다. 다음 예제를 확인하자.  
+```
+// "user" 클래스를 제거한다.
+// 먼저 클래스 이름 목록을 만든다.
+var className = div.className.split(/\s+/);
+// 제거할 클래스 이름을 찾는다.
+```
