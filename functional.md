@@ -79,8 +79,6 @@ return p +tr(c.reduce(function(p, c){
 }, ''))
 }, '');
 
-gomugom [10:33 PM]  
-added a JavaScript/JSON snippet
 wrapperTag = function(tag){
  return function(v){
     return '<' + tag + '>' + v + '</' + tag + '>';
@@ -133,7 +131,7 @@ return p +tr(c.reduce(function(p, c){
 ```
 1. 알고리즘의 대상이 줄어든다,변수가 줄어들고 제어용 변수가 위임된다  
 
-2. 지역변수를 없앨 수 있다 === 제네릭한 알고리즘을 짠다  
+2. 지역변수를 없앨 수 있다, 제네릭한 알고리즘을 짠다  
 ```
 for(){
  for(){
@@ -212,6 +210,7 @@ domProp = function(list, mapF){
 
 a = domProp(document.getElementsByTagName('div'), prop('innerHTML') );
 a = domProp(document.getElementsByTagName('div'), 'innerHTML');
+
 finder(valueFun, bestFun, coll)
 best( fun, coll)
 domList('div', 'innerHTML');
