@@ -169,7 +169,7 @@ i = -2
 <b></b>
 <div>c</div>
 <div>d</div>
-
+//b테그를 체커로 쓴다.
 b = document.getElementsByTagName('b');
 
 Array.from(b).reduce(function(result, el){
