@@ -160,6 +160,17 @@ if(div.classList.contains("bd") && !div.classList.contains("disableed")){
 for (var i=0, len=div.classList.length; i<len;,i++){
   dosomething(div.classList[i]);
 }
-
-
 ```
+classList 프로퍼티를 이용하면 요소의 class 속성을 신속하게 제거하거나 덮어쓸 때 외에는 className프로퍼티가 불필요하다.  
+
+마크업 삽입  
+innerHTML프로퍼티  
+HTML을 읽기 모드로 사용하면 요소와 주석, 텍스트 노드 등의 자식노드를 나태내는 HTML표현을 반환한다 innerHTML을 쓰기 모드로 사용하면 주어진 값을 바탕으로 새 DOM서브티르를 만들어 요소의 자식 노드를 완전히 교체한다 다음 html코드를 봐라.  
+<div id="content">
+<p>This is a <strong>paragraph</strong>with a list following it.</p>
+<ul>
+<li>Item 1</li>
+<li>Item 2</li>
+<li>Item 3</li>
+</ul>
+</div>
