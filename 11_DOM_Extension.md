@@ -140,3 +140,26 @@ div.className = className.join(" ");
 ```javascript
 div.classList.remove("user");
 ```
+이 코드를 쓰면 클래스 이름의 다른 부분은 전혀 영향을 받지 않는다. 다음 매서드들도 복잡한 기본 조작을 대단히 단순화한다. 다음예제를 확인해 보자  
+```javascript
+//"disabled" 클래스를 제거하자
+div.classList.remove("disabled");
+
+//"current" 클래스를 추가하자
+div.classList.add("current");
+
+//"user"클래스를 토글한다.
+div.classList.toggle("user");
+
+//현재 클래스를 확인한다.
+if(div.classList.contains("bd") && !div.classList.contains("disableed")){
+  //코드들
+}
+
+//클래스 이름을 순회한다.
+for (var i=0, len=div.classList.length; i<len;,i++){
+  dosomething(div.classList[i]);
+}
+
+
+```
