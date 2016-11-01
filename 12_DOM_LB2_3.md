@@ -23,3 +23,30 @@ var supportsDOM2HTML = document.implemention.hasfeature("HTML", "2.0");
 var supportsDOM2Views = document.implemention.hasfeature("Views", "2.0");
 var supportsDOM2XML = document.implemention.hasfeature("XML", "2.0");
 ```
+
+요소 스타일에 접근  
+DOM요소에 대한 참조가 유효하기만 하면 언제든지 자바스크립트로 스타일을 설정 할 수 있다. 다음의 예제를 확인하자.  
+```javascript
+var myDiv = document.getElementById("myDiv");
+
+//배경색 지정
+myDiv.style.backgroundColor = "red";
+
+//크기를 바꾼다.
+myDiv.style.width = "100px";
+myDiv.style.height = "200px";
+
+//테두리를 지정한다.
+myDiv.style.border = "1px solid black";
+```
+이런식으로 요소와 스타일을 바꾸면 화면에 보이는 모습도 자동으로 업데이트 된다.  
+style속성에 명시한 스타일은 style객체에서도 사용할 수 있다. 다음 HTML코드를 보자
+```
+<div id="myDiv" style="background-Color : blue; width:10px; height:25px"><div>
+```
+이 요소의 style속성에 저장된 정보는 다음 코드로 알 수 있다.  
+```javascript
+alert(myDiv.style.backgroundColor); //blue
+alert(myDiv.style.width); //10px
+alert(myDiv.style.height); //25px
+```
