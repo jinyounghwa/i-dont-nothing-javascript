@@ -50,3 +50,26 @@ alert(myDiv.style.backgroundColor); //blue
 alert(myDiv.style.width); //10px
 alert(myDiv.style.height); //25px
 ```
+요소에 style 속성이 없으면 style객체에 기본 값이 포함되지만 이것만으로 요소의 스타일의 정보를 알 수 없다.  
+
+DOM스타일 프로퍼티와 매서드  
+다음과 가은 프로퍼티와 매서드가 있다.  
++ cssText - style속성의 CSS코드에 접근한다.
++ length - 요소의 적용된 CSS 프로퍼티 갯수
++ parentRule - CSS정보를 표현하는 객체이다.
++ getPropertyCssValue(propertyName) - 주어진 값을 표현하는 CSSValue객체를 반환한다.
++ item(색인) - 주어진 위치에 있는 CSS프로퍼티 이름을 반환한다ㅏ.
++ removeProperty(propertyName) - 주어진 프로퍼티를 제거한다.
+
+cssText프로퍼티는 다음과 같이 사용한다.
+```javascript
+myDiv.style.cssText = "width:25px; height:100px; background-Color:green;"
+alert(myDiv.style.cssText);
+```
+
+length프로퍼티는 item()매서드와 함께 사용하여 요소에 정의된 CSS프로퍼티를 순회하도록 디자인되었다. 이둘을 이용하면 style객체를 마치 컬렉션 처럼 쓸 수 있으며 다음 예제처럼 item()대신 대괄호 표기법을 사용하여 주어진 위치의 CSS프로퍼티 이름을 알 수 도 있다.  
+```javascript
+for (var i=0, len=myDiv.style.length; i<len; i++){
+  alert(myDiv.style[i]); //또는 myDiv.style.item()
+}
+```
