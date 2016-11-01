@@ -177,3 +177,12 @@ HTML을 읽기 모드로 사용하면 요소와 주석, 텍스트 노드 등의 
 </div>
 ```
 이 예제의 < div >요소에서 innerHTML프로퍼티는 다음같은 문자열을 반환한다.  
+```
+<p> This is a <strong>paragraph</strong>with a list following it</p>
+<ul>
+<li>Item 1</li>
+<li>Item 2</li>
+<li>Item 3</li>
+</ul>
+```
+innerHTML이 정확히 어떤 텍스트를 반환할 지는 브라우저마다 다르다. innerHTML을 쓰기 모드로 사용하면 주어진 문자열을 DOM 서브트리로 파싱해 이미 존재하는 자식 노드를 모두 교체한다. 주어진 문자열은 HTML로 간주 되므로 모두 브라우저에서 HTML을 처리하는 표준에 따라 다른 요소로 변환된다.
