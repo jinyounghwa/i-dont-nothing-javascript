@@ -17,3 +17,5 @@ DOM의 이동은 중첩 깊이에 따른 이동이며 타입에 따라 다르긴
   </body>
 </html>
 ```
+위 페이지의 DOM트리는 아래와 같다.
+![Minion](https://github.com/jinyounghwa/i-dont-nothing-javascript/blob/master/image/12_4.png)  
