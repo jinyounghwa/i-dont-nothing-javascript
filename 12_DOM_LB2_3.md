@@ -73,3 +73,16 @@ for (var i=0, len=myDiv.style.length; i<len; i++){
   alert(myDiv.style[i]); //또는 myDiv.style.item()
 }
 ```
+대괄호 표기법이나 item()어느 것으로도 CSS프로퍼티 이름("background-Color"이 아니라 "backgroundColor")을 알 수 있다 다음 예제처럼 이 프로퍼티 이름을 getPropertyValue()에 넘겨 프로퍼티 값을 알 수 있다.  
+```javascript
+var prop, value, i, len;
+for(i=0, len=Div.styel.length; i < len; i++) {
+  prop = myDiv.style[i];
+  value = myDiv.style.getPropertyValue(prop);
+  alert(prop + " : " + value);
+}
+```
+getPropertyValue()매서드는 CSS프로퍼티 값을 항상 문자열 형태로 반환한다. 정보가 더 필요할 때는 getPropertyCssValue()에서 반환하는 CSSValue객체를 이용한다. 이 프로퍼티는 cssText와 cssVlaueType두 가지 프로퍼티를 가진다. cssVlaueType프로퍼티는 숫자형 상수이다. 0은 상속된 값, 1은 원시 값, 2는 목록, 3은 커스텀 값을 나타낸다.  
+```javascript
+
+```
