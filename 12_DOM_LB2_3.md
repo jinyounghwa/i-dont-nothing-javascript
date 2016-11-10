@@ -84,5 +84,11 @@ for(i=0, len=Div.styel.length; i < len; i++) {
 ```
 getPropertyValue()매서드는 CSS프로퍼티 값을 항상 문자열 형태로 반환한다. 정보가 더 필요할 때는 getPropertyCssValue()에서 반환하는 CSSValue객체를 이용한다. 이 프로퍼티는 cssText와 cssVlaueType두 가지 프로퍼티를 가진다. cssVlaueType프로퍼티는 숫자형 상수이다. 0은 상속된 값, 1은 원시 값, 2는 목록, 3은 커스텀 값을 나타낸다.  
 ```javascript
-
+var prop, value, i, len;
+for (i=0, len=myDiv.style.length; i < len; i++){
+  prop = myDiv.style[i];
+  value = myDiv.style.getPropertyCssValue(prop);
+  alert(prop + " : " + value.cssText + "("( + value.cssVlaueType + ")"));
+}
 ```
+현실적으로는 getPropertyValue()가 더 유용하다.  
