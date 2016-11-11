@@ -524,5 +524,87 @@ var createLaunchCommand = partial1(
 ```
 다음코드는 예상대로 작동함을 보여준다.
 ```javascript
+createCommand({msg:"", type:""});
+// Error: arg must have the count down
+
+createCommand({msg:"", type:"", countDown:10});
+// {msg : "", type:"", countDown:10}
 ```
 커링을 이용해서 함수를 만들든 아니든 제약이 있다. 두 기법 모두 자신의 인자를 하나이상을 이용해서 함수를 조립한다는 것이다. 함수의 인자와 반환값의 관계에 따라 조립할 함수를 결정하는 상황이 있음을 쉽게 예상할 수 있으며 다음에 함수의 끝을 서로 연결하는 함수 조립 방법을 설명한다.  
+
+함수의 끝을 서로 연결하는 함수 조립 방법  
+한쪽으로 데이터를 넣으면 반대편으로 완전히 새로운 데이터가 나올 수 있도록 함수들이 파이프라인을 이루고 있다면 가장 이상적인(단지 이상적일 뿐 출시되긴 어려운)함수형 프로그래밍이라고 할 수 있다.  
+```javascript
+!_.isString(name)
+```
+위 코드에서 함수 _ .isString 과 연산자 ! 사이에 파이프라인이 만들어 졌다.  
++ _ .isString은 객체를 인자로 받아 불린값을 반환한다.
++ !는 (정상적인 상황이라면) 불린값을 평가해서 불린을 반환한다.
+
+함수형 조립은 여러 함수가 수행하는 데이터 변형을 모아서 위와 같은 데이터 체인을이용해서 새로운 함수를 만든다.  
+```javascript
+function isntString(str) {
+  return !_.isString(str);
+}
+isString(1); //=> true
+```
+언더스코어의 _ .compose함수를 이용해서 함수를 조립하는 방법도 있다.  
+```javascript
+var isntString = _.compose(function(x){return !x}, _.isString);
+
+isntString([]);
+//=>true
+```
+_ .compose함수는 오른쪽에서 왼쪽으로 작동한다. 즉 가장 오른쪽의 함수의 결과가 함수로 하나씩 전달한다 다음처럼 코드에 공백을 집어넣어 구분하면 좀 더 명확하게 동작을 확인 할 수 있다.  
+```javascript
+                               !      _.isString("a")
+_.compose(function(str){return !str}, _.isString("a"));
+```
+!연산자를 다음과 같이 함수로 캡슐화 할 수 있다.  
+```javascript
+function not(x) {return !x}
+```
+예상할 수 있듯이 다음처럼 not함수를 추가한다.
+```javascript
+var isntString = _.compose(not, _.isString);
+```
+이런 방식으로 함수를 조립하면 아무것도 변경하지 않은 상태에서 문자열을 불린값으로 바꿀 수 있다. 이는 정말 훌룡한 성과다 이와 같은 조립 모델을 기반으로 기초적인 데이터 변환을 레고 블록처럼 서로 연결해서 다른 기능을 만드는 함수 종합세트를 만들 수 있다. 이전에 정의했던 mapcat함수를 _ .compose를 이용해서 다음과 같이 정의 할 수 있다.  
+```javascript
+var composedMapcat = _.compose(split(cat), _.map);
+
+composedMapcat([1,2],[3,4],[5], _.identity);
+//=>[1,2,3,4,5]
+```
+함수를 조립해서 새로운 기능을 만드는 방법은 셀 수 없이 많다. 다음절에서는 그 중 한 가지 방법을 소개한다.  
+
+조립을 이용해서 선행조건과 후행조건 만들기  
+선행조건은 어떤 함수의 실행결과가 다른 제약 조건을 만족하는 결과를 반환할 수 있도록 정의하는 조건이라고 설명했다. 결과의 제약 조건을 후행조건이라부른다. condition1과 partial을 이용해서 uncheckedSqr인자의 선행조건을 검사하는 함수 checkerSqr을 만들 수 있었다. 제곱의 결과를 확인하는 후행조건은 condition1을 이용해서 다음과 같이 정의 할 수 있다.  
+```javascript
+var sqrPost = condition1(
+  validator("result should be a number", _.isNumber),
+  validator("result should not be zero", complement(zero)),
+  validator("result should be positive", greaterThan(0)));
+```
+다양한 에러 상황을 입력해서 코드가 제대로 동작하는지 확인 할 수 있다.  
+```javascript
+sqrPost(_.identity, -1); //Error :result should be positive
+
+sqrPost(_.identity, ''); // Error : result should be a number, result should be positive
+
+sqrPost(_.identity, 100); //=> 100
+```
+하지만 후행검사 check 함수를 어떻게 기존 uncheckedSqr, sqrPre 함수에 추가 할 수 있을까? 라는 지룸ㄴ이 생긴다 정답은 _ .compose라는 접착제를 사용하는 것이다.  
+```javascript
+var megaCheckedSqr = _.compose(partial(sqrPost, _.identity), checkerSqr);
+```
+사용법은 checkerSqr과 정확히 같다.  
+```javascript
+megaCheckedSqr(10); //=> 100
+
+megaCheckedSqr(0); //=> Error: arg must not be zero
+```
+다음 상황은 예외다.  
+```javascript
+megaCheckedSqr(NaN);//=> Error result should be positive
+```
+만약 후행검사에서 에러가 발생한다면 선행검사가 부족하거나 후행검사가 과도하거나 아니면 로직 자체에 결함이 있음을 의미한다. 우리가 함수에 모든것을 제공했으므로 후행검사 실패 책음은 전적으로 우리의 잘못이다.  
