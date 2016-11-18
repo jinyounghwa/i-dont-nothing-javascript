@@ -108,6 +108,8 @@ _.zip.apply(null, constructPair(['a',1], [[],[]]));
  + 언제 멈출지 알아야 한다.  
  + 한 단계에서 무엇을 실행할 지 결정한다.  
  + 문제를 더 작은 문제나 아니면 한 단계로 풀 수 있는 문제로 작게 분리한다.  
+ 재귀의 규칙  
+
  <table>
      <tr>
      <td>함수</td>
@@ -136,3 +138,115 @@ _.zip.apply(null, constructPair(['a',1], [[],[]]));
  </tr>
 
  </table>
+
+ 위 규칙을 템플릿으로 삼아 직접 재귀 함수를 만들 수 있다. 아무리 복잡한 재귀 함수라도 이런 재귀의 규칙을 벗어나지 않는다. 좀 더 복잡한 예제를 살펴보면서 규칙의 유사성을 알아보자.  
+
+ 재귀를 이용한 그래프 탐색  
+ Node와 Arc객체 형식을 이용해서 언어와 연결 관계를 객체나 클래스 기반으로 표현 할 수도 있지만, 여기서는 다음처럼 간단한 문자열의 배열 형식으로 표현했다.  
+ ```javascript
+ var influences = [
+   ['Lisp', 'Smalltalk'],
+   ['Lisp', 'Scheme'],
+   ['Smalltalk', 'Self'],
+   ['Scheme', 'Javascript'],
+   ['Scheme', 'Lua'],
+   ['Self', 'Lua'],
+   ['Self', 'Javascript']
+ ];
+ ```
+ 중첩배열 influences는 영향을 받은 언어의 관계를 의미한다. 재귀함수 nexts는 다음과 같이 정의한다.  
+ ```javascript
+ function nexts(graph, node) {
+   if(_.isEmpty(graph) return []
+
+   var pair = _.first(graph);
+   var from = _.first(pair);
+   var to = secound(pair);
+   var more = _.rest(graph);
+
+   if (_isEqual(node, from))
+    return constrct(to, nexts(more, node));
+    else
+      return nexts(more,node);
+ )
+ }
+ ```
+ 다음 코드에서 확인할 수 있듯이 nexts함수는 재귀적으로 그래프를 탐색하면서 특정 프로그래밍 언어에 영향을 받은 프로그래밍 언어 배열을 반환한다.  
+ ```javascript
+ nexts(influences, "Lisp");
+ //=>['Smalltalk', 'Scheme']
+ ```
+ nexts의 재귀 호출은 지금까지 살펴본 재귀 호촐과는 다르다. nexts에서는 if문의 두 분기문 모두에서 재귀 호출이 일어난다. next의 'then'분기문에서는 주어진 대상 노드를 확인하며 else분기문에서는 중요하지 않은 노드를 무시한다.  
+ <table>
+     <tr>
+     <td>함수</td>
+     <td>언제멈출지</td>
+     <td>한단계수행</td>
+     <td>작은문제</td>
+
+   </tr>
+   <tr>
+   <td>nexts</td>
+   <td>_ .isEmpty</td>
+   <td>constrct(...)</td>
+   <td>_ .rest</td>
+ </tr>
+ </table>
+
+메모리에서 깊이 우선 재귀 탐색하기  
+여기서는 그래프 탐색을 이용해서 깊이 우선 탐색 함수 구현을 살펴본다. 함수형 프로그래밍에서는 데이터 구조체에서 특정 데이터를 탐핵하는 상황이 빈번하게 발생하는 편이다. influences같은 계층 구조의 그래프 데이터에서는 자연스럽게 재귀적으로 탐색을 수행한다. 기본적으로 주어진 노드를 찾으려면 그래프의 모든 노드를 탐색해야 한다. 깊이 우선 탐색 기법은 현재 노드를 기준으로 가징 왼쪽의 노드부터 방문하는 방식으로 탐색을 수행한다.  
+
+이전의 재귀 구현과 달리 depthSearch는 이미 탐색한 노드를 메모리에 기억한다. 현제 예제 그래프에서는 사이클이 없이느 괜찮지만 사이클이 존재하는 노드에서는 문제가 발생할 수 있으므로 이미 탐색한 노드를 메모리에 기억해야 하며 그렇지 않으면 자바스크립트가 무한수행 모드로 빠져든다.재귀호출에서 호출 간의 통신 수단은 인자 뿐이므로 누산기라는 인자를 이용해서 메모리를 한 호출에서 다른 호출로 전달 할 필요가 있다. 보통 재귀 호출에서는 누산기 인자를 통해 정보를 전달한다. 다음 누산기를 이용해서 depthSearch를 구현한 코드다.  
+
+```javascript
+function depthSearch(graph, nodes, seen) {
+  if(_.isEmpty(nodes)) return rev(seen);
+
+  var node = _.first(nodes);
+  var more = _.rest(nodes);
+
+  if(_.contains(seen,node))
+  return depthSearch(graph, more, seen);
+  else {
+    return depthSearch(graph,
+                        cat(nexts(graph,node),more),
+                        constrct(node, seen));
+  }
+}
+```
+세번째 파라미터 seen은 기존 노드와 그 자식을 탐색하지 않도록 이전에 탐색한 노드를 누적하는 역할을 한다. 다음은 depthSearch사용 예제다.  
+```javascript
+depthSearch(influences,['Lisp'],[]);
+//=> ['Lisp',"Smalltalk", 'Self', 'Lua', "javascript","Scheme"]
+
+depthSearch(influences,['Smalltalk', 'Self']);
+//=> ['Smalltalk', 'Self', 'Lua', 'Javascript']
+
+depthSearch(constrct(['Lua', 'Io'], influences),['Lisp'],[]);
+//=> ['Lisp', 'Smalltalk', 'Self', 'Io', 'Javascript', 'Scheme']
+```
+depthSearch함수는 아무것도 하지 않는다는 사실을 파악했을 것이다. depthSearch함수는 단지 뭔가를 깊이 우선 순서로 실행 할 수 있도록 노드 배열을 만들 뿐이다. 나중에 함수형 조립과 상호재귀를 이용해서 깊이 우선 전략을 다시 구현할 것이므로 지금은 이정도로 충분하다. 먼저 꼬리 호출을 보자.  
+
+꼬리 재귀  
+depthSearch도 기존의 재귀 함수와 비슷해 보일 수 있지만 사실 depthSearch는 기존의 재귀함수와 중요한 차이가 있다.  
+<table>
+    <tr>
+    <td>함수</td>
+    <td>언제멈출지</td>
+    <td>한단계수행</td>
+    <td>작은문제</td>
+
+  </tr>
+  <tr>
+  <td>nexts</td>
+  <td>_ .isEmpty</td>
+  <td>constrct(...)</td>
+  <td>_ .rest</td>
+</tr>
+<tr>
+<td>depthSearch</td>
+<td>_ .isEmpty</td>
+<td>depthSearch(more..)</td>
+<td>depthSearch(cat...)</td>
+</tr>
+</table>
