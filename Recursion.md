@@ -110,40 +110,29 @@ _.zip.apply(null, constructPair(['a',1], [[],[]]));
  + 문제를 더 작은 문제나 아니면 한 단계로 풀 수 있는 문제로 작게 분리한다.  
  <table>
      <tr>
-     <td>break</td>
-     <td>do</td>
-     <td>instanceof</td>
-     <td>typeof</td>
+     <td>함수</td>
+     <td>언제멈출지</td>
+     <td>한단계수행</td>
+     <td>작은문제</td>
 
    </tr>
    <tr>
-   <td>case</td>
-   <td>else</td>
-   <td>new</td>
-   <td>var</td>
+   <td>myLength</td>
+   <td>_ .isEmpty</td>
+   <td>1 + ...</td>
+   <td>_ .rest</td>
  </tr>
  <tr>
- <td>catch</td>
- <td>finally</td>
- <td>return</td>
- <td>void</td>
+ <td>cycle</td>
+ <td>times <= 0</td>
+ <td>cat(array ...)</td>
+ <td>times -1</td>
  </tr>
  <tr>
- <td>continue</td>
- <td>for</td>
- <td>switch</td>
- <td>while</td>
+ <td>unzip</td>
+ <td>_ .isEmpty</td>
+ <td>constructPair(_ .first)</td>
+ <td>_ .rest</td>
  </tr>
- <tr>
- <td>debugger</td>
- <td>function</td>
- <td>this</td>
- <td>with</td>
- </tr>
- <tr>
- <td>in</td>
- <td>try</td>
- <td>-</td>
- <td>-</td>
- </tr>
+
  </table>
