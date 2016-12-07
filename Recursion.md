@@ -108,6 +108,8 @@ _.zip.apply(null, constructPair(['a',1], [[],[]]));
  + 언제 멈출지 알아야 한다.  
  + 한 단계에서 무엇을 실행할 지 결정한다.  
  + 문제를 더 작은 문제나 아니면 한 단계로 풀 수 있는 문제로 작게 분리한다.  
+
+
  재귀의 규칙  
 
  <table>
@@ -250,3 +252,251 @@ depthSearch도 기존의 재귀 함수와 비슷해 보일 수 있지만 사실 
 <td>depthSearch(cat...)</td>
 </tr>
 </table>
+
+'한 단계 수행' 과 '작은문제' 항목에서 어떤차이인지 드러난다. 두 가지 항목 중 하나 이상이 재귀면 꼬리재귀라고 한다. 즉, 함수에서 발생한 마지막 동작(종료 요소를 반환하는 상황은제외)이 재귀 호출이다. depthSearch의 마지막 호출이 재귀 호출이므로 함수의 바디는 다시 사용되지 않는다. 스킴같은 언어에서는 이런 특성을 이용하여 꼬리 재귀 함수 바디에서 사용된 리소스를 헤체한다.  
+다음은 꼬리 재귀를 이용해서 myLength를 다시 구현한 코드다.  
+```javascript
+function tcLength(ary, n) {
+  var l = n ? n : 0
+
+  if (_.isEmpty(ary))
+    return l;
+    else
+    return toLength(_.rest(ary), l +1)
+}
+toLength(_.range(10)); //=>10
+```
+그러나 myLength의 재귀 호출(즉, 1+..) 에서는 마지막 덧샘을 수행하기 위해 함수의 바디를 다시 방문한다. 언젠가 꼬리 재귀 함수를 최적화하도록 자바스크립트 엔진이 개선될 것이다.   
+
+재귀 함수와 합성 함수  
+찬반형 몇 개를 인자로 받아 인자 모두의 결과가 참인지 여부를 결정하는 함수를 반환하는 checker 함수를 만들었다. 이번에는 checker와 같은 동작을 수행하는 andify라는 재귀함수를 만들겠다.  
+```javascript
+function andify(/*preds*/) {
+  var preds = _.toArray(arguments);
+
+  return function(/*args*/) {
+    var args = _.toArray(arguments);
+    var everything = function(ps, truth) {
+      if(_.isEmpty(ps))
+        return truth;
+        else
+        return _.every(args, _.first(ps))
+              && everything(_.rest(ps), truth)
+    };
+    return everything(preds, true);
+  }
+}
+```
+실행결과이다.  
+```javascript
+var evenNums = andify(_.isNumber, isEven);
+
+evenNums(1,2); //=> false
+
+evenNums(2,4,6,8); //=> true
+
+evenNums(2,4,6,8,9); //=> false
+```
+위 코드에서 andify가 반환하는 함수에서 일어나는 재귀 호출에 주목하자 논리 and연산자 && 는 게으른 방식으로 동작하므로 _ .every검사가 실패하면 재귀 호출이 발생하지 않는다. 이런종류의 게으름을 단락이라고 하며 단락의 특성을 이용하면 불필요한 연산을 줄일 수 있다.  
+
+상호재귀 함수  
+서로를 호출하는 두개 이상의 함수를 상호재귀 함수라고 한다. 다음에 소개할 짝수인지 홀수인지 검사하는 찬반형 함수는 서로를 호출하는 간단한 상호 재귀 함수 예제다.  
+```javascript
+function evenSteven(n) {
+  if (n ===0)
+    return true;
+    else
+    return oddJohn(Math.abs(n) -1);
+}
+function oddJohn(n) {
+  if (n===0)
+    return false;
+    else
+      return evenSteven(Math.abs(n) -1);
+}
+```
+상호재귀 호출이 일어날 때마다 n이 0이 될 때까지 n을 -1씩 감소시킨다. 각 함수는 다음 코드에서 확인 할 수 있는 것처럼 예상대로 작동한다.  
+```javascript
+evenSteven(4); //=> true
+
+oddJohn(1); //=> true
+```
+고차원 함수를 고집하는 독자일수록 상호 배타적인 함수를 더 자주 접할 것이다. 일례로 _ .map 함수를 생각해 보자. 실제로 자신과 _ .map을 호출하는 함수는 상호 재귀를 간접적으로 설명하고 있는것이나 마찬가지다. 다음은 단일 수준으로 배열을 평준화 하는 함수의예제다.  
+```javascript
+function flat(array) {
+  if(_.isArray(array))
+    return cat.apply(cat, _.map(array, flat));
+  else
+  return [array];
+}
+```
+flat함수는 중첩된 각 요소를 배열로 만든 다음에 이들 배열을 재귀적으로 연결하는 방법을 이용해서 중첩된 배열을 평탄화 시킨다. 다음은 flat을 수행한 결과다.  
+```javascript
+flat([1,2],[3,4]); //=> [1,2,3,4]
+
+flat([[1,2],[3,4],[5,6]],[[[7]],[[8]]]); //=>[1,2,3,4,5,6,7,8]
+```
+시살 flat은 상호재귀를 명확하게 보여주는것은아니지만 의미는 크다.  
+
+재귀를 이용한 깊은 복제  
+깊은 방식으로 객체를 복제할 때 재귀를 이용하면 효율적으로 작업 할 수 있다. 언더스코어도 _ .clone 함수를 제공하지만 이는 깊은 복제가 아닌 얕은 복제로 동작한다.  
+```javascript
+var x = [{a:[1,2,3],b:42},{c:{d:[]}}];
+
+var y = _.clone(x);
+
+y;
+//=> [{a:[1,2,3],b:42},{c:{d:[]}}];
+
+X[1]['c']['d'] = [100000]
+y;
+//=> [{a:[1,2,3],b:42},{c:{d:100000}}];
+```
+_ .clone도 상당히 유용한 함수지만 어떤 객체아ㅗ 그 객체의 하위객체까지 모두 복제해야 할 때가 있다. 재귀에서는 중첩방식을 이용해서 모든 객체를 탐색하면서 복제할 수 있으므로 어떤 객체와 그 객체의 하위객체까지 모두 복제 할 때는 재귀를 이용하는것이 좋다. 실제 업무에서 사용할 수 있을 정도의 수준은 아니지만 deepClone은 재귀 방식으로 객체를 복제하는 방식을 보여주는 함수다.  
+
+```javascript
+function deepClone(obj) {
+  if (!existy(obj) || !_.isObject(obj))
+  return obj;
+  var temp = new obj.constructor();
+  for (var key in obj)
+  if (obj.hasOwnProperty(key))
+    temp[key] = deepClone(obj[key])
+
+    return temp;
+}
+```
+deepClone에서 숫자와 같은 기본형이 나타나면 해당 데이터를 그냥 반환한다. 그러나 객체를 반환하면 객체를(모든데이터를 표현 할 수 있는) 연상 구조체로 간주하면서 객체의 모든 키 값 매핑을 재귀적으로 복사한다. 프로토 타입의 필드는 복사하는 일이 없도록 obj.hasOwnProperty(key)를 이용했다. 개인적으로 객체를 맵같은 연상 데이터 구조체로 사용하며, 불가피한 상황을 제외하면 데이터를 프로토타입으로 추가하지 않는다. 다음 코드는 deepClone을 활용하는 모습을 보여 준다.  
+```javascript
+var x = [{a:[1,2,3], b:42}, {c:{d:[]}}];
+
+var y = deepClone(x);
+
+_.isEqual(x,y);
+//=>true
+
+y[1]['c']['d'] = 42;
+_.isEqual(x,y);
+//=> false
+```
+자바스크립트에서는 모든것이 객체 기반인 덕분에 재귀 기법이 간단명료해진다는 점 이외에는 deepClone에서 특이한 점을 찾을 수 없다 다음 상호재귀를 이용해서 실제로 어떤 동작을 수행하는지 알아보자.  
+
+중첩된 배열 탐색  
+다음과 같은 패턴이 자주 보일것이다.  
+```javascript
+doSomethingWithResult(_.map(someArray, SomeFun));
+```
+_ .map호출 결과는 추가로 필요한 작업을 처리할 수 있도록 다른 함수로 넘겨진다. 다음에 소개할 visit라는 함수는 충분히 추상화 된 함수다.  
+```javascript
+function visit(mapFun, resultFun, array) {
+  if(_.isArray(array))
+    return resultFun(_.map(array, mapFun));
+  else
+  return resultFun(array);
+}
+```
+visit함수는 처리할 배열 외에 함수를 인자로 받는다. 인자로 받은 mapFun을 배열의 각 요소에 호출한 다음에 최종 작업을 수행할 수 있도록 결과 배열을 resultFun으로 넘긴다, 배열로 넘겨준 요소가 배열이 아니면 해당 요소에 resultFun을 수행한다 부분적용을이용해서 visit로 다양한 동작을 구현할 때 이런 유형의 함수가 매우 유용하다.  
+
+너무 깊은 재귀  
+꼬리 재귀를 살펴볼 때 언급했던 것처럼 자바스크립트 엔진은 기술적으로는 충분히 할 수 있음에도 불구하고 재귀호출을 최적화하지 않았다.  
+```javascript
+evenSteven(100000) // Too much recursion
+```
+evenSteven과 oddJohn이 상호 재귀적으로 서로를 수천 번 이상 호출하면서 너무깊은 재귀 에러가 발생할 수 있다. 여기서는 트램펄린 이라 불리는 구조를 이용해서 스택 깨짐을 피하는 방법을 설명한다. 중첩 호출을 평탄화 시킨 호출로 바꾸는것이 트램펄린의 기본 원리다.  
+```javascript
+function even0line(n) {
+  if (n === 0)
+    return true;
+  else
+    return partial1(odd0line, Math.abs(n) -1);
+}
+function odd0line(n) {
+  if (n === 0)
+    return false;
+  else
+    return partial1(even0line, Math.abs(n) -1);
+}
+```
+even0line 과 odd0line의 바디에서 상호 재귀함수를 호출하는 대신 상호 재귀를 감싸는 함수를 반환한다. 각 함수에 종료 상황을 입력해 보면 예상대로 작동함을 확인 할 수 있다.  
+```javascript
+even0line(0); //=>true
+
+odd0line(0); //=> false
+```
+이제 다음코드처럼 상호재귀를 수작업으로 평탄화 시킬 수 있다.  
+```javascript
+odd0line(3);
+//=> function () {return even0line(Math.abs(n) -1)}
+```
+
+trampoline 함수는 호출을 더 근사하게 프로그램적으로 평탄화 시킨다.  
+```javascript
+function trampoline(fun /*args*/) {
+  var result = fun.apply(fun, _.rest(arguments))
+
+  while (_.isFunction(result)) {
+    result = result();
+  }
+  return result;
+}
+```
+trampoline은 단순하게 함수의 반환값을 함수가 아닐때가지 호출한다. 실행결과는 다음과 같다.  
+```javascript
+trampoline(odd0line, 3) //=> true
+```
+trampoline을 이용하면 호출 체인이 간접적으로 이루어지면서 기존의 상호 재귀 호출에 비해 추가적으로 오버헤드가 더해진다. 하지만 일반적으로 스택이 깨지는 것보다 속도가 느려지는것이 낫다.  
+함수형 파사드를 이용하면 trampoline을 완전히 감출 수 있다.  
+```javascript
+function isEvenSafe(n) {
+  if ( n===0)
+    return true;
+  else
+  return trampoline(partial1(odd0line, Math.abs(n)-1))
+}
+function isOddSafe(n){
+  if (n===0)
+    return false;
+  else
+  return trampoline(partial1(even0line, Math.abs(n) -1))
+}
+
+isOddSafe(2000001) //=> true
+```
+
+발생기  
+```javascript
+_take(cycle(20,[1,2,3])11);
+
+//=> [1,2,3,1,2,3,1,2,3,1,2,3,1,2]
+```
+언더스코에는 _ .first와 _ .rest 라는 함수를 제공한다. 마찬가지로 무한한 배열을 첫 번째는 머리와 나머지는 꼬리로 분석 할 수 있다. head와 tail을 이용해서 객체를 만들어 이와같은 분석을 표현 할 수 있다.  
+```javascript
+(head : aValue, tail:???)
+```
+객체의 tail에는 무엇을 포함시켜야 할 까 라는 질문이 생긴다. head/tail 객체를 만들려면 약간의 노고가 필요하다. 현재 셀의 값을 계산할 함수 그리고 다음 시드값을 계산할 함수가 필요하다. 사실 이와 같은 구조는 발생기로 알려진 구조의 일종이다. 발생기의 구현 코드를 살펴보자.  
+```javascript
+function generator(seed, current, step) {
+  return {
+    head : current(seed),
+    tail : function() {
+      console.log("forced");
+      return generator(step(send), current, step);
+    }
+  }
+}
+```
+코드에서 확인할 수 있듯이 current는 head위치의 값을 계산하는 함수이고 step은 재귀 호출에 제공하는 값이다. tail값은 function에 래핑되어 실제 호출이 일어날 때까지는 실현되지 않는다는것을 눈여겨본다.
+
+genTake같은 생성기에서 첫번째 n개의 항목을 배열로만드는 강력한 접근자 함수를 만들 수 있다.   
+```javascript
+function genTake(n,gen) {
+  var doTake = function(x,g,ret) {
+    if (x === 0)
+      return ret;
+    else
+      return partial1(doTake, X-1, gentail(g), cat(ret,genHead(g)))
+  };
+  return trampoline(doTake, n, gen, []);
+}
+```
+위 예제는 트램펄린 원칙을 이용해서 스택을 깨드리지 않으며 요청시아 값을 계산한다는 목표를 달성하는 동시에 무한한 크기의 구조체를 정의하는 방법을 보여 준다. generator를 이용하년 genTake 에는 매번 셀을 계산해줘야 한다는 치명적인 결함이 있다. 
